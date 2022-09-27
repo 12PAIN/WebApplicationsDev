@@ -7,12 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import java.sql.*;
 import java.nio.file.*;
 import java.io.*;
 import java.util.*;
-
-
 
 public class WebController extends HttpServlet
 {
@@ -24,36 +21,138 @@ public class WebController extends HttpServlet
     try
     {	
 		String servletPath =(String)(request.getServletPath());
-		if(servletPath.equals("/login")){
-			pageResponse(request, response);
+
+		HttpSession session = request.getSession(true);
+		Object userTrueObject = session.getAttribute("logined");
+		boolean userTrue = false;
+
+		if(servletPath.equals("/UserCreate") && request.getParameter("new_login") != null && request.getParameter("new_password") != null){
+			DataBase db = DataBase.getInstance();
+			db.createUser((String)(request.getParameter("new_login")), (String)(request.getParameter("new_password")));
+			userTrue = true;
+			request.setAttribute("login", (String)(request.getParameter("new_login")));
+			session.setAttribute("login", (String)(request.getParameter("new_login")));
+		}else if(servletPath.equals("/UserCreate")){
+			pageRegResponse(request, response, true);
 		}
-		else if(servletPath.equals("/add")){
+
+		if(servletPath.equals("/register") && userTrue != true){
+			pageRegResponse(request, response, false);
+		}
+
+
+		if(userTrueObject != null){userTrue = (boolean)(userTrueObject);}
+
+		if(servletPath.equals("/exit")){
+			userTrue = false;
+			request.setAttribute("logined", false);
+			session.setAttribute("logined", false);
+			request.setAttribute("login", null);
+			session.setAttribute("login", null);
+		}
+
+		if(session.getAttribute("login") != null){
+			request.setAttribute("login", (String)(session.getAttribute("login")));
+			session.setAttribute("login", (String)(session.getAttribute("login")));
+		}
+
+		if(request.getParameter("login") != null && request.getParameter("password") != null  && userTrue != true){
+			boolean userCheck = loginSuccsesfull((String)(request.getParameter("login")), (String)(request.getParameter("password")));
+			if(userTrue != true && userCheck == true){
+				session.setAttribute("logined", true);
+				request.setAttribute("logined", true);
+				request.setAttribute("login", (String)(request.getParameter("login")));
+				session.setAttribute("login", (String)(request.getParameter("login")));
+				userTrue = true;
+			}
+
+			if (userCheck == false){
+				request.setAttribute("loginError", true);
+				userTrue = false;
+			}
+		}
+
+		if(userTrue != true){
+			if(request.getAttribute("loginError") != null){
+				pageLoginResponse(request, response, true);
+			}else{
+				pageLoginResponse(request, response, false);
+			}
+		}
+
+		if(userTrue == true){session.setAttribute("logined", true);}
+
+		if(servletPath.equals("/add") && userTrue == true){
+
 			dbAddRow(request, response);
-			pageResponse(request, response);
-		}else if(servletPath.equals("/delete")){
+			pageTableResponse(request, response);
+
+		}else if(servletPath.equals("/delete") && userTrue == true){
+
 			dbDeleteRows(request, response);
-			pageResponse(request, response);
+			pageTableResponse(request, response);
+
+		} else if(userTrue == true){
+			pageTableResponse(request, response);
 		};
 		
     }    
     catch (Exception ex){printWriter.println("Error: "+ex.getMessage());}
   }
+  	protected static void pageRegResponse(HttpServletRequest request, HttpServletResponse response, boolean regError) throws IOException{
 
-	protected static void pageResponse(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException{
+		PrintWriter printWriter = null;
+
+		try{printWriter = response.getWriter();}catch (Exception ex){}
+		try{
+			if(regError == true) {request.setAttribute("regError", true);}
+			String view = "register";
+			request.getRequestDispatcher("/WEB-INF/views/"+view+".jsp").forward(request,response);
+		}
+		catch (Exception ex)
+		{       
+			printWriter.println("Error: "+ex.getMessage());     
+		}
+
+
+  	}
+
+  	protected static void pageLoginResponse(HttpServletRequest request, HttpServletResponse response, boolean loginError) throws IOException{
+
+		PrintWriter printWriter = null;
+
+		try{printWriter = response.getWriter();}catch (Exception ex){}
+		try{
+
+			if(loginError == true) {request.setAttribute("loginError", true);}
+			String view = "login";
+			request.getRequestDispatcher("/WEB-INF/views/"+view+".jsp").forward(request,response);
+		}
+		catch (Exception ex)
+		{       
+			printWriter.println("Error: "+ex.getMessage());     
+		}
+
+
+  	}
+
+	protected static boolean loginSuccsesfull(String login, String password) throws IOException{
+		try{
+			DataBase db = DataBase.getInstance();
+			return db.isUserCorrect(login, password);
+		}catch (Exception ex){return false;}
+	}
+
+	protected static void pageTableResponse(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
 		PrintWriter printWriter = null;
 		
     	try{printWriter = response.getWriter();}catch (Exception ex){}
-		try{Class.forName("com.mysql.cj.jdbc.Driver");} catch(Exception ex){}
-		try{Connection conn = getConnection();
-			Statement statement = conn.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) AS count_rows FROM products");
-			resultSet.next();
-			int rows = resultSet.getInt("count_rows");
-			resultSet.close();
+		try{
 
-			resultSet = statement.executeQuery("SELECT * FROM products");
-
+			DataBase db = DataBase.getInstance();
+			String[][] resultSet = db.selectProducts();
+			int rows = db.selectProductRowsCount(); 
 			int[] id = new int[rows];
 			String[] name = new String[rows];
 			int[] price = new int[rows];
@@ -62,11 +161,11 @@ public class WebController extends HttpServlet
     	    int i = 0;
 
 
-    	    while(resultSet.next()){
-    	        id[i] = resultSet.getInt("id");
-    	        name[i] = resultSet.getString("ProductName");
-    	        price[i] = resultSet.getInt("Price");
-    	        description[i] = resultSet.getString("Description");  
+    	    for(String[] row: resultSet){
+    	        id[i] = Integer.parseInt(row[0]);
+    	        name[i] = row[1];
+    	        price[i] = Integer.parseInt(row[2]);
+    	        description[i] = row[3];  
     	        i++;
     	    }
 
@@ -77,7 +176,6 @@ public class WebController extends HttpServlet
 			request.setAttribute("description", description);   
 		    String view = "main";
 		    request.getRequestDispatcher("/WEB-INF/views/"+view+".jsp").forward(request,response);
-			conn.close();
 		}
 		catch (Exception ex)
 		{       
@@ -87,15 +185,12 @@ public class WebController extends HttpServlet
 
   	}
 
-	protected static void dbAddRow(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException{
+	protected static void dbAddRow(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
 		PrintWriter printWriter = null;
 		
     	try{printWriter = response.getWriter();}catch (Exception ex){}
-		try{Class.forName("com.mysql.cj.jdbc.Driver");} catch(Exception ex){}
-		try{Connection conn = getConnection();
-			Statement statement = conn.createStatement();
-
+		try{
 			String name = new String();
 			int price=-1;
 			String description = new String();
@@ -107,15 +202,8 @@ public class WebController extends HttpServlet
 				description = (String)(request.getParameter("description"));
 			}
 
-			String sqlInsert = "INSERT INTO products(ProductName, Price, Description) Values (?, ?, ?)";
-            PreparedStatement preparedStatement = conn.prepareStatement(sqlInsert);
-            preparedStatement.setString(1, name);
-            preparedStatement.setInt(2, price);
-			preparedStatement.setString(3, description);
-
-			preparedStatement.executeUpdate();
-
-			conn.close();
+			DataBase db = DataBase.getInstance();
+			db.addRow(name,price,description);
 		}
 		catch (Exception ex)
 		{       
@@ -125,29 +213,19 @@ public class WebController extends HttpServlet
 
   	}
 
-	protected static void dbDeleteRows(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException{
+	protected static void dbDeleteRows(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
 		PrintWriter printWriter = null;
 		
     	try{printWriter = response.getWriter();}catch (Exception ex){}
-		try{Class.forName("com.mysql.cj.jdbc.Driver");} catch(Exception ex){}
-		try{Connection conn = getConnection();
-			String sqlDelete = "DELETE FROM products WHERE id = (?)";
+
+		try{
 
 			String[] to_delete = request.getParameterValues("to_delete");
 
-			if(to_delete != null){
-				PreparedStatement preparedStatement = conn.prepareStatement(sqlDelete);
-				for(String to_delete_row: to_delete){
+			DataBase db = DataBase.getInstance();
+			db.deleteRows(to_delete);
 
-					preparedStatement.setString(1, to_delete_row);
-
-					preparedStatement.executeUpdate();
-
-				}
-			}
-
-			conn.close();
 		}
 		catch (Exception ex)
 		{       
@@ -156,15 +234,6 @@ public class WebController extends HttpServlet
 
 
   	}
-
-    protected static Connection getConnection() throws SQLException, IOException{
-
-		String url = "jdbc:mysql://localhost/LAB_1?serverTimezone=Europe/Moscow&useSSL=false";
-    	String username = "root";
-    	String password = "starwars123G";
-
-    	return DriverManager.getConnection(url, username, password);
- 	}
 
 }
 

@@ -20,7 +20,19 @@
     /add
    </url-pattern>
    <url-pattern>
+    /table
+   </url-pattern>
+   <url-pattern>
+    /exit
+   </url-pattern>
+   <url-pattern>
     /delete
+   </url-pattern>
+   <url-pattern>
+    /register
+   </url-pattern>
+   <url-pattern>
+    /UserCreate
    </url-pattern>
   </servlet-mapping>
 </web-app>
