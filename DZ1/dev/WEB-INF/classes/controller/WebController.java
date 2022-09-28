@@ -13,92 +13,94 @@ import java.util.*;
 
 public class WebController extends HttpServlet
 {
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-  {    
-    PrintWriter printWriter = null;
-    try{printWriter = response.getWriter();} catch (Exception ex){}
-	
-    try
-    {	
-		String servletPath =(String)(request.getServletPath());
 
-		HttpSession session = request.getSession(true);
-		Object userTrueObject = session.getAttribute("logined");
-		boolean userTrue = false;
-
-		if(servletPath.equals("/UserCreate") && request.getParameter("new_login") != null && request.getParameter("new_password") != null){
-			DataBase db = DataBase.getInstance();
-			db.createUser((String)(request.getParameter("new_login")), (String)(request.getParameter("new_password")));
-			userTrue = true;
-			request.setAttribute("login", (String)(request.getParameter("new_login")));
-			session.setAttribute("login", (String)(request.getParameter("new_login")));
-		}else if(servletPath.equals("/UserCreate")){
-			pageRegResponse(request, response, true);
-		}
-
-		if(servletPath.equals("/register") && userTrue != true){
-			pageRegResponse(request, response, false);
-		}
-
-
-		if(userTrueObject != null){userTrue = (boolean)(userTrueObject);}
-
-		if(servletPath.equals("/exit")){
-			userTrue = false;
-			request.setAttribute("logined", false);
-			session.setAttribute("logined", false);
-			request.setAttribute("login", null);
-			session.setAttribute("login", null);
-		}
-
-		if(session.getAttribute("login") != null){
-			request.setAttribute("login", (String)(session.getAttribute("login")));
-			session.setAttribute("login", (String)(session.getAttribute("login")));
-		}
-
-		if(request.getParameter("login") != null && request.getParameter("password") != null  && userTrue != true){
-			boolean userCheck = loginSuccsesfull((String)(request.getParameter("login")), (String)(request.getParameter("password")));
-			if(userTrue != true && userCheck == true){
-				session.setAttribute("logined", true);
-				request.setAttribute("logined", true);
-				request.setAttribute("login", (String)(request.getParameter("login")));
-				session.setAttribute("login", (String)(request.getParameter("login")));
-				userTrue = true;
-			}
-
-			if (userCheck == false){
-				request.setAttribute("loginError", true);
-				userTrue = false;
-			}
-		}
-
-		if(userTrue != true){
-			if(request.getAttribute("loginError") != null){
-				pageLoginResponse(request, response, true);
-			}else{
-				pageLoginResponse(request, response, false);
-			}
-		}
-
-		if(userTrue == true){session.setAttribute("logined", true);}
-
-		if(servletPath.equals("/add") && userTrue == true){
-
-			dbAddRow(request, response);
-			pageTableResponse(request, response);
-
-		}else if(servletPath.equals("/delete") && userTrue == true){
-
-			dbDeleteRows(request, response);
-			pageTableResponse(request, response);
-
-		} else if(userTrue == true){
-			pageTableResponse(request, response);
-		};
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	{    
+		PrintWriter printWriter = null;
+		try{printWriter = response.getWriter();} catch (Exception ex){}
 		
-    }    
-    catch (Exception ex){printWriter.println("Error: "+ex.getMessage());}
-  }
+		try
+		{	
+			String servletPath = (String)(request.getServletPath());
+
+			HttpSession session = request.getSession(true);
+			Object userTrueObject = session.getAttribute("logined");
+			boolean userTrue = false;
+
+			if(servletPath.equals("/UserCreate") && request.getParameter("new_login") != null && request.getParameter("new_password") != null){
+				DataBase db = DataBase.getInstance();
+				db.createUser((String)(request.getParameter("new_login")), (String)(request.getParameter("new_password")));
+				userTrue = true;
+				request.setAttribute("login", (String)(request.getParameter("new_login")));
+				session.setAttribute("login", (String)(request.getParameter("new_login")));
+			}else if(servletPath.equals("/UserCreate")){
+				pageRegResponse(request, response, true);
+			}
+
+			if(servletPath.equals("/register") && userTrue != true){
+				pageRegResponse(request, response, false);
+			}
+
+
+			if(userTrueObject != null){userTrue = (boolean)(userTrueObject);}
+
+			if(servletPath.equals("/exit")){
+				userTrue = false;
+				request.setAttribute("logined", false);
+				session.setAttribute("logined", false);
+				request.setAttribute("login", null);
+				session.setAttribute("login", null);
+			}
+
+			if(session.getAttribute("login") != null){
+				request.setAttribute("login", (String)(session.getAttribute("login")));
+				session.setAttribute("login", (String)(session.getAttribute("login")));
+			}
+
+			if(request.getParameter("login") != null && request.getParameter("password") != null  && userTrue != true){
+				boolean userCheck = loginSuccsesfull((String)(request.getParameter("login")), (String)(request.getParameter("password")));
+				if(userTrue != true && userCheck == true){
+					session.setAttribute("logined", true);
+					request.setAttribute("logined", true);
+					request.setAttribute("login", (String)(request.getParameter("login")));
+					session.setAttribute("login", (String)(request.getParameter("login")));
+					userTrue = true;
+				}
+
+				if (userCheck == false){
+					request.setAttribute("loginError", true);
+					userTrue = false;
+				}
+			}
+
+			if(userTrue != true){
+				if(request.getAttribute("loginError") != null){
+					pageLoginResponse(request, response, true);
+				}else{
+					pageLoginResponse(request, response, false);
+				}
+			}
+
+			if(userTrue == true){session.setAttribute("logined", true);}
+
+			if(servletPath.equals("/add") && userTrue == true){
+
+				dbAddRow(request, response);
+				pageTableResponse(request, response);
+
+			}else if(servletPath.equals("/delete") && userTrue == true){
+
+				dbDeleteRows(request, response);
+				pageTableResponse(request, response);
+
+			} else if(userTrue == true){
+				pageTableResponse(request, response);
+			};
+			
+		}    
+		catch (Exception ex){printWriter.println("Error: "+ex.getMessage());}
+	}
+  
   	protected static void pageRegResponse(HttpServletRequest request, HttpServletResponse response, boolean regError) throws IOException{
 
 		PrintWriter printWriter = null;
