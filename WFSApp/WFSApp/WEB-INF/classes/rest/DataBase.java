@@ -1,6 +1,8 @@
-package controller;
+package rest;
 
 import java.sql.*;
+
+import javax.swing.text.StyledEditorKit.BoldAction;
 
 public class DataBase {
     private static DataBase instance;
@@ -48,13 +50,16 @@ public class DataBase {
         return false;
     }
 
-    public static void createUser(String login, String password) throws SQLException, SQLTimeoutException{     
-        String sqlInsert = "INSERT INTO users(login, password) Values (?, ?)";
+    public static Boolean createUser(String login, String password, String email) throws SQLException, SQLTimeoutException{     
+        String sqlInsert = "INSERT INTO users(login, password, email) Values (?, ?, ?)";
         PreparedStatement preparedStatement = conn.prepareStatement(sqlInsert);
         preparedStatement.setString(1, login);
-        preparedStatement.setString(2, password);        
-        preparedStatement.executeUpdate();
+        preparedStatement.setString(2, password);
+        preparedStatement.setString(3, email);
+        int rows = preparedStatement.executeUpdate();
         preparedStatement.close();
+        if(rows != 0){ return true;}
+        else return false;
     }
 
     public static void addRow(String name, int price, String description) throws SQLException, SQLTimeoutException{     

@@ -4,9 +4,28 @@
   <meta http-equiv="Content-Type" content="text/html; charset=Windows-1251">
   <title>Start</title>
  </head>
- <body>
-  <form method="post" action="login">   
-     <input type="submit" value="Start">
-  </form>
+ <body id="body">
+   <script>
+      function indexPage(){
+        var body = document.getElementById('body');
+        var form = document.createElement('form');
+        form.method = 'post';   
+        form.action = 'login';
+     
+        var inp = document.createElement('input');
+        inp.type = 'submit';
+        inp.value = 'Start';
+     
+        form.appendChild(inp);
+
+        var div = document.createElement('div');
+        div.class = 'btn-group';
+        div.appendChild(form);
+
+        body.appendChild(div);
+     }
+     
+     indexPage();
+   </script>
  </body>
 </html>
