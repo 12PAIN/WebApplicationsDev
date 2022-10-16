@@ -31,28 +31,84 @@ public class Service {
     return "OK";
   } 
 
-  @GET
+  @POST
   @Path("/checkUser")
-  @Produces("text/plain")
-  public String checkUser(@QueryParam("username") String username, @QueryParam("password") String password) {
-     Boolean usrTrue = null;
-     try{
-       DataBase db = DataBase.getInstance();
-       usrTrue = DataBase.isUserCorrect(username, password);
-     }catch (java.sql.SQLException sqle){sqle.printStackTrace();}
-     catch (Exception ex){ex.printStackTrace();};
-    
+  @Consumes("application/json")
+  @Produces("application/json")
+  public Response checkUser(String userJson) {
+    User user;
+    Jsonb jsonb = JsonbBuilder.create();
+    String resultJSON = "undefinedError";
+    try{
 
-     String usrTrueStr = null;
+      try{
+        user = jsonb.fromJson(userJson, new User(){}.getClass().getGenericSuperclass());
+      }catch (Exception e) {
+        resultJSON = "Error while JSON transforming.";
+        throw new Exception("Error while JSON transforming.");  
+      }
 
-     if(usrTrue == true && usrTrue != null){
-       usrTrueStr = "true";
-     }else{
-       usrTrueStr = "false";
-     }
+      Boolean usrTrue = null;
 
-     return usrTrueStr;
+      try{
+
+        DataBase db = DataBase.getInstance();
+        usrTrue = DataBase.isUserCorrect(user.getLogin(), user.getPassword());
+
+      }catch (java.sql.SQLException sqle){sqle.printStackTrace();}
+      catch (Exception ex){ex.printStackTrace();};
+      
+      if(usrTrue == true){
+        Token token = Token.generateToken(user);
+        
+        resultJSON = jsonb.toJson(token);
+      }else{
+        resultJSON = "false";
+      }
+
+      
+
+    }catch (JsonbException e) {
+      return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+    }
+    catch (Exception e) {
+      return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+    }    
+    return Response.ok(resultJSON).build(); 
   }
+
+  @POST
+  @Path("/checkUserToken")
+  @Consumes("application/json")
+  @Produces("application/json")
+  public Response checkUserToken(String tokenJson) {
+    Jsonb jsonb = JsonbBuilder.create();
+    String resultJSON = "undefinedError";
+    Token token;
+    try{
+
+      try{
+        token = jsonb.fromJson(tokenJson, new Token(){}.getClass().getGenericSuperclass());
+      }catch (Exception e) {
+        resultJSON = "Error while JSON transforming.";
+        throw new Exception("Error while JSON transforming.");  
+      }
+ 
+      if(Token.verifyToken(token) == true){
+        resultJSON = "true";
+      }else{
+        resultJSON = "false";
+      }
+
+    }catch (JsonbException e) {
+      return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+    }
+    catch (Exception e) {
+      return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+    }    
+    return Response.ok(resultJSON).build(); 
+  }
+
 
   @POST
   @Path("/createUser")

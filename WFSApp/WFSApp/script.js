@@ -1,24 +1,33 @@
-var login;
-var logined;
-
 var body = document.getElementById('body');
 
 function startPage(){
-    if(login == undefined || logined == undefined || login == null || logined == null){
+    if(localStorage.getItem('WFSAppUserToken') == null || checkUserToken() == false){
         loginForm();
     }
     else{
-        displayMainMenu();
-        displayDefaultPage();
+        displayMainPage();
     }
 }
 
-function displayMainMenu(){
+function displayMainPage(){
+    if(document.getElementById('loginDiv') != null){
+        body.removeChild(document.getElementById('loginDiv'));
+    }
 
-}
+    var mainpage = document.createElement('div');
+    mainpage.id = 'mainPage';
 
-function displayDefaultPage(){
+    var btn_exit = document.createElement('button');
 
+    btn_exit.textContent = 'Exit';
+    btn_exit.addEventListener("click", function(){
+        localStorage.removeItem('WFSAppUserToken');
+        body.removeChild(document.getElementById('mainPage'));
+        startPage();
+    });
+
+    mainpage.appendChild(btn_exit);
+    body.appendChild(mainpage);
 }
 
 function loginForm(){
@@ -169,16 +178,21 @@ function loginButtonClicked(){
         document.getElementById('loginDiv').appendChild(errP);
         return;
     }
-    else usrCheckQuerry(document.getElementById('login').value, document.getElementById('password').value);
+    else authQuerry(document.getElementById('login').value, document.getElementById('password').value);
 }
 
-function usrCheckQuerry(username, password){
+function authQuerry(username, password){
     var xhr = new XMLHttpRequest();
     
-    var flagAsync = true;
-    xhr.open("GET", "api/checkUser/?username="+username+"&password="+password, flagAsync);
+    var authUser = {
+        login: username,
+        password: password
+    }
 
-    xhr.send();
+    var flagAsync = true;
+    xhr.open("POST", "api/checkUser", flagAsync);
+
+    xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
     
     xhr.onreadystatechange = function() {
         if (this.readyState != 4) return;
@@ -191,19 +205,21 @@ function usrCheckQuerry(username, password){
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
         } 
         else { 
-            var response = xhr.responseText;   
-            setTimeout(loginLogic(response, username), 0);
+            //console.log(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);   
+            setTimeout(authLogic(response, username), 0);
         } 
        
         // получить результат из this.responseText или this.responseXML
     }
+
+    xhr.send(JSON.stringify(authUser));
 }
 
-function loginLogic(response, username){
-    if(response == "true"){
-        logined = true;
-        login = username;
-        console.log("Login True!");
+function authLogic(response){
+    if(response.payload !== null && response.payload !== undefined){
+
+        localStorage.setItem('WFSAppUserToken', JSON.stringify(response));
 
         if(document.getElementById('errLogin') != null){
             document.getElementById('loginDiv').removeChild(document.getElementById('errLogin'));
@@ -214,16 +230,53 @@ function loginLogic(response, username){
             errP.innerText = 'Logined! Please, wait for pesponse...';
             document.getElementById('loginDiv').appendChild(errP);
         }
-
-    }else if(response == "false"){
-        if(document.getElementById('errLogin') == null){
-            var errP = document.createElement('p');
-            errP.id = 'errLogin';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
-            errP.innerText = 'Failed to Login! Error: Invalid Login or Password!';
-            document.getElementById('loginDiv').appendChild(errP);
-        }
+        startPage();
+        return;
     }
+
+    if(document.getElementById('errLogin') == null){
+        var errP = document.createElement('p');
+        errP.id = 'errLogin';
+        errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
+        errP.innerText = 'Failed to Login! Error: Invalid Login or Password!';
+        document.getElementById('loginDiv').appendChild(errP);
+    }
+}
+
+function checkUserToken(){
+    var xhr = new XMLHttpRequest();
+    
+    var flagAsync = true;
+    xhr.open("POST", "api/checkUserToken", flagAsync);
+
+    xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
+
+    xhr.onreadystatechange = function() {
+        if (this.readyState != 4) return;
+    
+        // по окончании запроса доступны:
+        // status, statusText
+        // responseText, responseXML (при content-type: text/xml)
+    
+        if (xhr.status !== 200) {  
+            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
+        } 
+        else { 
+            //console.log(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            if(response == 'true') return true;
+            return false;
+        } 
+       
+        // получить результат из this.responseText или this.responseXML
+    }
+
+    var token = {
+        crypto: JSON.parse(localStorage.getItem('WFSAppUserToken')).crypto,
+        payload: JSON.parse(localStorage.getItem('WFSAppUserToken')).payload
+    }
+
+    xhr.send(JSON.stringify(token));
 }
 
 function registerButtonClicked(){
