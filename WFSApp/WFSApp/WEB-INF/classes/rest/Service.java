@@ -7,7 +7,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Consumes;
 
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.HeaderParam;
 
 import jakarta.ws.rs.core.Response;
 
@@ -32,10 +32,10 @@ public class Service {
   } 
 
   @POST
-  @Path("/checkUser")
+  @Path("/auth")
   @Consumes("application/json")
   @Produces("application/json")
-  public Response checkUser(String userJson) {
+  public Response authUser(String userJson) {
     User user;
     Jsonb jsonb = JsonbBuilder.create();
     String resultJSON = "undefinedError";
@@ -52,7 +52,7 @@ public class Service {
 
       try{
 
-        DataBase db = DataBase.getInstance();
+        DataBase.initDataBase();
         usrTrue = DataBase.isUserCorrect(user.getLogin(), user.getPassword());
 
       }catch (java.sql.SQLException sqle){sqle.printStackTrace();}
@@ -77,27 +77,33 @@ public class Service {
     return Response.ok(resultJSON).build(); 
   }
 
-  @POST
-  @Path("/checkUserToken")
-  @Consumes("application/json")
+  @GET
+  @Path("/productList")
   @Produces("application/json")
-  public Response checkUserToken(String tokenJson) {
+  public Response getProductList(@HeaderParam("User-token") String userToken){
+    Token token;
     Jsonb jsonb = JsonbBuilder.create();
     String resultJSON = "undefinedError";
-    Token token;
     try{
 
       try{
-        token = jsonb.fromJson(tokenJson, new Token(){}.getClass().getGenericSuperclass());
+        token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
       }catch (Exception e) {
         resultJSON = "Error while JSON transforming.";
         throw new Exception("Error while JSON transforming.");  
       }
- 
-      if(Token.verifyToken(token) == true){
-        resultJSON = "true";
+
+      Boolean usrTrue = null;
+
+      if(Token.verifyToken(token)){
+        try{
+          DataBase.initDataBase();
+          ArrayList<Product> productList = DataBase.selectProducts();
+          resultJSON = jsonb.toJson(productList);
+        } catch(SQLException e){}
+        catch(Exception e){};
       }else{
-        resultJSON = "false";
+        resultJSON = "tokenError";
       }
 
     }catch (JsonbException e) {
@@ -109,9 +115,8 @@ public class Service {
     return Response.ok(resultJSON).build(); 
   }
 
-
   @POST
-  @Path("/createUser")
+  @Path("/user")
   @Consumes("application/json")
   @Produces("application/json")
   public Response createUser(String User){
@@ -129,7 +134,7 @@ public class Service {
         try{
 
           Boolean userCreated = false;
-          DataBase db = DataBase.getInstance();
+          DataBase.initDataBase();
           userCreated = DataBase.createUser(newUser.getLogin(), newUser.getPassword(), newUser.getEmail());
           if(userCreated == true) resultJSON = "createUser_Ok_status";
           else if (userCreated == false) resultJSON = "userIsExistStatus";
@@ -145,37 +150,4 @@ public class Service {
     }    
     return Response.ok(jsonb.toJson(resultJSON)).build();  
   }
-
- 
- 
- @POST   
- @Path("/test")
- @Consumes("application/json")
- @Produces("application/json")
- public Response test(String studentsJSON) 
- {            
-   Jsonb jsonb = JsonbBuilder.create();          
-   List<Student> students;      
-   String resultJSON;
-   try {  
-      try { 
-       students = jsonb.fromJson(studentsJSON,new ArrayList<Student>(){}.getClass().getGenericSuperclass());                    
-      }
-      catch (Exception e) {
-        throw new Exception("Error while JSON transforming.");  
-      }
-      for (Student student : students ) {
-		  student.setId(student.getId()+1);
-      }		  
-	  resultJSON = jsonb.toJson(students);	  	 
-   }
-   catch (JsonbException e) {
-    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
-   }
-   catch (Exception e) {
-    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
-   }    
-   return Response.ok(resultJSON).build();           
- }
- 
 }

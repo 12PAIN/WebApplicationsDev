@@ -1,6 +1,7 @@
 package rest;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import javax.swing.text.StyledEditorKit.BoldAction;
 
@@ -13,7 +14,7 @@ public class DataBase {
         try{conn = getConnection();}catch (Exception ex){};
 	}
 
-    public static DataBase getInstance() throws SQLException, SQLTimeoutException, Exception{
+    public static DataBase initDataBase() throws SQLException, SQLTimeoutException, Exception{
         if(instance == null){
             instance = new DataBase();
         }
@@ -72,7 +73,7 @@ public class DataBase {
         preparedStatement.close();
     }
 
-    public static void deleteRows(String[] to_delete) throws SQLException, SQLTimeoutException{
+    public static void deleteRows(ArrayList<String> to_delete) throws SQLException, SQLTimeoutException{
         String sqlDelete = "DELETE FROM products WHERE id = (?)";
         if(to_delete != null){
             PreparedStatement preparedStatement = conn.prepareStatement(sqlDelete);
@@ -87,33 +88,24 @@ public class DataBase {
         }
     }
 
-    public static int selectProductRowsCount() throws SQLException, SQLTimeoutException{
-        PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) AS count_rows FROM products");
-		ResultSet resultSet = statement.executeQuery();
-		resultSet.next();
-		int rows = resultSet.getInt("count_rows");
-        statement.close();
-		resultSet.close();
-        return rows;
-    }
-
-    public static String[][] selectProducts() throws SQLException, SQLTimeoutException{
+    public static ArrayList<Product> selectProducts() throws SQLException, SQLTimeoutException{
 
         PreparedStatement statement = conn.prepareStatement("SELECT * FROM products");
         ResultSet resultSet = statement.executeQuery();
 
-        int rows = selectProductRowsCount();
+        ArrayList<Product> strResultSet = new ArrayList<>();
 
-        String[][] strResultSet = new String[rows][4];
-
-        int i = 0;
         while(resultSet.next()){
-            strResultSet[i][0] = String.valueOf(resultSet.getInt("id"));
-            strResultSet[i][1] = resultSet.getString("ProductName");
-            strResultSet[i][2] = String.valueOf(resultSet.getInt("Price"));
-            strResultSet[i][3] = resultSet.getString("Description");  
-            i++;
+            Product newProduct = Product.createProduct(
+                resultSet.getInt("id"),
+                resultSet.getString("ProductName"),
+                resultSet.getInt("Price"),
+                resultSet.getString("Description")
+            );
+            
+            strResultSet.add(newProduct);
         }
+
         resultSet.close();
         statement.close();
         return strResultSet;

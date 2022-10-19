@@ -34,6 +34,8 @@ body {
 }
 
 .mainMenu {
+
+
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -55,7 +57,7 @@ body {
 }
 
 .menuListItem:hover {
-    text-decoration: underline;
+    text-decoration: underline #000000;    
 }
 
 .ExitButton {

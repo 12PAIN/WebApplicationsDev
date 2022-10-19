@@ -1,12 +1,12 @@
 var body = document.getElementById('body');
 
 function startPage(){
-    if(localStorage.getItem('WFSAppUserToken') == null || checkUserToken() == false){
+    if(localStorage.getItem('WFSAppUserToken') == null){
         loginForm();
+        return;
     }
-    else{
-        displayMainPage();
-    }
+
+    displayMainPage();
 }
 
 function displayMainPage(){
@@ -34,6 +34,7 @@ function displayMainPage(){
     mainpage.appendChild(btn_exit);
     body.appendChild(mainpage);
     body.appendChild(mainMenu());
+    productList();
 }
 
 function tasksCalendar(){
@@ -46,6 +47,42 @@ function tasksCalendar(){
     header.className = 'MenuHeader';
 
     return taskCalendar;
+}
+
+function productList(){
+    getProductList();
+}
+
+function getProductList(){
+    var xhr = new XMLHttpRequest();
+    
+    var flagAsync = true;
+    xhr.open("GET", "api/productList", flagAsync);
+
+    xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
+    xhr.setRequestHeader('User-token', localStorage.getItem('WFSAppUserToken'));
+    
+    xhr.onreadystatechange = function() {
+        if (this.readyState != 4) return;
+    
+        // по окончании запроса доступны:
+        // status, statusText
+        // responseText, responseXML (при content-type: text/xml)
+    
+        if (xhr.status !== 200) {  
+            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
+        } 
+        else { 
+            //console.log(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            console.log(response);   
+            //setTimeout(authLogic(response, username), 0);
+        } 
+       
+        // получить результат из this.responseText или this.responseXML
+    }
+
+    xhr.send();
 }
 
 function mainMenu(){
@@ -256,7 +293,7 @@ function authQuerry(username, password){
     }
 
     var flagAsync = true;
-    xhr.open("POST", "api/checkUser", flagAsync);
+    xhr.open("POST", "api/auth", flagAsync);
 
     xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
     
@@ -309,42 +346,6 @@ function authLogic(response){
     }
 }
 
-function checkUserToken(){
-    var xhr = new XMLHttpRequest();
-    
-    var flagAsync = true;
-    xhr.open("POST", "api/checkUserToken", flagAsync);
-
-    xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
-
-    xhr.onreadystatechange = function() {
-        if (this.readyState != 4) return;
-    
-        // по окончании запроса доступны:
-        // status, statusText
-        // responseText, responseXML (при content-type: text/xml)
-    
-        if (xhr.status !== 200) {  
-            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
-        } 
-        else { 
-            //console.log(xhr.responseText);
-            var response = JSON.parse(xhr.responseText);
-            if(response == 'true') return true;
-            return false;
-        } 
-       
-        // получить результат из this.responseText или this.responseXML
-    }
-
-    var token = {
-        crypto: JSON.parse(localStorage.getItem('WFSAppUserToken')).crypto,
-        payload: JSON.parse(localStorage.getItem('WFSAppUserToken')).payload
-    }
-
-    xhr.send(JSON.stringify(token));
-}
-
 function registerButtonClicked(){
     if((document.getElementById('new_login').value == '' || document.getElementById('new_password').value == '' || document.getElementById('new_email').value == '') && document.getElementById('errRegister') == null){
         var errP = document.createElement('p');
@@ -366,7 +367,7 @@ function registerQuery(username, password, email){
 
     var xhr = new XMLHttpRequest();
     var flagAsync = true;
-    var uri = "./api/createUser";
+    var uri = "./api/user";
 
     xhr.open("POST", uri, flagAsync)
     xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
