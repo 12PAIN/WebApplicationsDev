@@ -18,16 +18,82 @@ function displayMainPage(){
     mainpage.id = 'mainPage';
 
     var btn_exit = document.createElement('button');
+    btn_exit.className = "ExitButton";
 
     btn_exit.textContent = 'Exit';
     btn_exit.addEventListener("click", function(){
         localStorage.removeItem('WFSAppUserToken');
         body.removeChild(document.getElementById('mainPage'));
+        body.removeChild(document.getElementById('MainMenu'));
+
+
+
         startPage();
     });
 
     mainpage.appendChild(btn_exit);
     body.appendChild(mainpage);
+    body.appendChild(mainMenu());
+}
+
+function tasksCalendar(){
+
+    var taskCalendar = document.createElement('div');
+    taskCalendar.id = "taskCalendar";
+    taskCalendar.className = "taskCalendar";
+
+    var header = document.createElement('p');
+    header.className = 'MenuHeader';
+
+    return taskCalendar;
+}
+
+function mainMenu(){
+    var divMainMenu = document.createElement('div');
+    divMainMenu.id = "MainMenu";
+    divMainMenu.className = "mainMenu";
+
+    var divListMenu = document.createElement('div');
+    divListMenu.id = "ListMenu";
+    divListMenu.className = "ListMenu";
+    
+    var header = document.createElement('p');
+    header.id = "MenuHeader";
+    header.className = "MenuHeader";
+
+    var str = "Привет, ";
+
+        {
+            var login = JSON.parse(localStorage.getItem('WFSAppUserToken'));
+            login = login.payload.login;
+            str+=login;
+        }
+
+    str += "\n Главное меню:"
+
+
+    header.innerText = str;
+
+    var p1 = document.createElement('p');
+    p1.innerText = "Календарь задач";
+    p1.className = "menuListItem";
+
+    var p2 = document.createElement('p');
+    p2.innerText = "Список товаров";
+    p2.className = "menuListItem";
+
+    var p3 = document.createElement('p');
+    p3.innerText = "Продажи";
+    p3.className = "menuListItem";
+
+    divListMenu.appendChild(header);
+    divListMenu.appendChild(p1);
+    divListMenu.appendChild(p2);
+    divListMenu.appendChild(p3);
+
+    divMainMenu.appendChild(divListMenu);    
+
+    return divMainMenu;
 }
 
 function loginForm(){

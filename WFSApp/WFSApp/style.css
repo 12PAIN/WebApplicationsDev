@@ -5,7 +5,7 @@ body {
 }
 
 .div-loginForm {
-    background-color: greenyellow;
+    background-color: #A2FF93;
 
     display: flex;
     flex-wrap: wrap;
@@ -31,6 +31,38 @@ body {
 
 .WrapCenteredInlineBlock {
     display: inline-block;
+}
+
+.mainMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px;
+    gap: 10px;
+
+    position: fixed;
+    width: fit-content;
+    height: fit-content;
+    top: 2%;
+    left: 1%;
+
+    background: #A2FF93;
+    mix-blend-mode: normal;
+    border-radius: 10px;
+
+    box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.295);
+
+}
+
+.menuListItem:hover {
+    text-decoration: underline;
+}
+
+.ExitButton {
+    position: fixed;
+    top: 2%;
+    left: 98%;
+    transform: translate(-50%, -50%);
 }
 
 .div-twoButtonsContainer {
