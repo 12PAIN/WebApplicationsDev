@@ -34,7 +34,7 @@ function displayMainPage(){
     mainpage.appendChild(btn_exit);
     body.appendChild(mainpage);
     body.appendChild(mainMenu());
-    productList();
+    getProductList();
 }
 
 function tasksCalendar(){
@@ -49,14 +49,97 @@ function tasksCalendar(){
     return taskCalendar;
 }
 
-function productList(){
-    getProductList();
+function productListMenu(response){
+     
+    console.log(response);
+
+    if(response == 'tokenError'){
+        alert("Ошибка авторизации! Пройдите авторизацию ещё раз!");
+        localStorage.removeItem('WFSAppUserToken');
+        setTimeout(startPage, 100);
+        return;
+    };
+
+    if(response == 'RequestError'){
+        alert("Ошибка сервера! Попробуйте ещё раз!");
+        return;
+    };
+
+    var productListMenu = document.createElement('div');
+    productListMenu.id = 'productList';
+    productListMenu.className = 'productList';
+
+    var table = document.createElement('table');
+    table.className = 'productTable';
+
+    var th = document.createElement('tr');
+
+    var tdh1 = document.createElement('th');
+    tdh1.innerText = "ID";
+
+    var tdh2 = document.createElement('th');
+    tdh2.innerText = "Имя";
+
+    var tdh3 = document.createElement('th');
+    tdh3.innerText = "Цена";
+
+    var tdh4 = document.createElement('th');
+    tdh4.innerText = "Описание";
+
+    var tdh5 = document.createElement('th');
+    tdh5.innerText = "Удалить?";
+
+    th.appendChild(tdh1);
+    th.appendChild(tdh2);
+    th.appendChild(tdh3);
+    th.appendChild(tdh4);
+    th.appendChild(tdh5);
+
+    table.appendChild(th);
+
+    response.forEach(function(item, i, arr){
+        var tr = document.createElement('tr');
+
+        var td1 = document.createElement('td');
+        td1.innerText = item.id;
+
+        var td2 = document.createElement('td');
+        td2.innerText = item.name;
+
+        var td3 = document.createElement('td');
+        td3.innerText = item.price;
+
+        var td4 = document.createElement('td');
+        td4.innerText = item.description;      
+        
+        var td5 = document.createElement('td');
+
+        var currentInput = document.createElement('input');
+        currentInput.type = 'checkbox';
+        currentInput.name = 'to_delete';
+        currentInput.value = item.id;
+
+        td5.appendChild(currentInput);
+
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tr.appendChild(td4);
+        tr.appendChild(td5);
+
+        table.appendChild(tr);
+
+    });
+
+
+    productListMenu.appendChild(table);
+    body.appendChild(productListMenu);
 }
 
 function getProductList(){
     var xhr = new XMLHttpRequest();
     
-    var flagAsync = true;
+    var flagAsync = false;
     xhr.open("GET", "api/productList", flagAsync);
 
     xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
@@ -71,12 +154,13 @@ function getProductList(){
     
         if (xhr.status !== 200) {  
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
+            return "RequestError";
+            alert("Ошибка сервера! Попробуйте обновить таблицу меню!");
         } 
         else { 
-            //console.log(xhr.responseText);
             var response = JSON.parse(xhr.responseText);
-            console.log(response);   
-            //setTimeout(authLogic(response, username), 0);
+            console.log(response);  
+            productListMenu(response);            
         } 
        
         // получить результат из this.responseText или this.responseXML
@@ -118,6 +202,7 @@ function mainMenu(){
     var p2 = document.createElement('p');
     p2.innerText = "Список товаров";
     p2.className = "menuListItem";
+    p2.style = "text-decoration: underline #000000;";
 
     var p3 = document.createElement('p');
     p3.innerText = "Продажи";
