@@ -25,7 +25,7 @@ function displayMainPage(){
         localStorage.removeItem('WFSAppUserToken');
         body.removeChild(document.getElementById('mainPage'));
         body.removeChild(document.getElementById('MainMenu'));
-
+        if(document.getElementById("productList") != null) body.removeChild(document.getElementById("productList"));
 
 
         startPage();
@@ -50,12 +50,11 @@ function tasksCalendar(){
 }
 
 function productListMenu(response){
-     
-    console.log(response);
 
     if(response == 'tokenError'){
         alert("Ошибка авторизации! Пройдите авторизацию ещё раз!");
         localStorage.removeItem('WFSAppUserToken');
+        if(document.getElementById("productList") != null) body.removeChild(document.getElementById("productList"));
         setTimeout(startPage, 100);
         return;
     };
@@ -65,9 +64,54 @@ function productListMenu(response){
         return;
     };
 
+    if(document.getElementById("productList") != null){
+        body.removeChild(document.getElementById("productList"));
+    }
+
     var productListMenu = document.createElement('div');
     productListMenu.id = 'productList';
     productListMenu.className = 'productList';
+
+    var input1 = document.createElement('input');
+    input1.name = 'name';
+    input1.id = 'nameAdd';
+    input1.placeholder = 'Имя продукта';
+    input1.className = 'productListAddInput';
+
+    var input2 = document.createElement('input');
+    input2.name = 'price';
+    input2.id = 'priceAdd';
+    input2.placeholder = 'Цена';
+    input2.className = 'productListAddInput';
+
+    var input3 = document.createElement('input');
+    input3.name = 'description';
+    input3.id = 'descriptionAdd';
+    input3.placeholder = 'Описание';
+    input3.className = 'productListAddInput';
+
+    var btnAdd = document.createElement('button');
+    btnAdd.textContent = 'Добавить';
+
+    btnAdd.addEventListener("click", addQuery);
+
+    var divAdd = document.createElement('div');
+    divAdd.className = 'productListAdd';
+
+    var div_delete = document.createElement('div');
+    div_delete.id = 'deleteProductsDiv';
+    div_delete.className = 'deleteProductsDiv';
+
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Удалить';
+    deleteButton.addEventListener("click", deleteRowsQuery);
+
+    div_delete.appendChild(deleteButton);
+
+    divAdd.appendChild(input1);
+    divAdd.appendChild(input2);
+    divAdd.appendChild(input3);
+    divAdd.appendChild(btnAdd);
 
     var table = document.createElement('table');
     table.className = 'productTable';
@@ -116,6 +160,7 @@ function productListMenu(response){
 
         var currentInput = document.createElement('input');
         currentInput.type = 'checkbox';
+        currentInput.className = 'checkboxToDelete';
         currentInput.name = 'to_delete';
         currentInput.value = item.id;
 
@@ -131,12 +176,82 @@ function productListMenu(response){
 
     });
 
-
+    productListMenu.appendChild(divAdd);
+    productListMenu.appendChild(div_delete);
     productListMenu.appendChild(table);
     body.appendChild(productListMenu);
 }
 
+function deleteRowsQuery(){
+    if(document.getElementsByClassName('checkboxToDelete') == null) return;
+
+    var checkboxes = document.getElementsByClassName('checkboxToDelete');
+    var checkboxChecked = [];
+
+    for (var index = 0; index < checkboxes.length; index++) {
+        if (checkboxes[index].checked) {
+           checkboxChecked.push(checkboxes[index].value);
+        }
+    }
+
+    var xhr = new XMLHttpRequest();
+    
+    var flagAsync = false;
+    xhr.open("DELETE", "api/products", flagAsync);
+
+    console.log(JSON.stringify(checkboxChecked));
+
+    xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
+    xhr.setRequestHeader('User-token', localStorage.getItem('WFSAppUserToken'));
+    xhr.setRequestHeader('To-delete-rows', JSON.stringify(checkboxChecked));
+    
+    xhr.onreadystatechange = function() {
+        if (this.readyState != 4) return;
+    
+        // по окончании запроса доступны:
+        // status, statusText
+        // responseText, responseXML (при content-type: text/xml)
+    
+        if (xhr.status !== 200) {  
+            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
+            alert("Ошибка сервера! Попробуйте ещё раз!")
+            return "RequestError";
+        } 
+        else { 
+            var response = xhr.responseText;
+
+            if(response == 'rows_deleted'){
+                setTimeout(getProductList, 0);
+                return;
+            }
+
+            if(response == "tokenError"){
+
+                alert("Ошибка авторизации! Выполните повторный вход!");
+                localStorage.removeItem('WFSAppUserToken');
+                setTimeout(startPage, 0);
+                return;
+            }else{
+                alert("Неизвестная ошибка. Попробуйте ещё раз!");
+            }
+
+            
+
+        } 
+       
+        // получить результат из this.responseText или this.responseXML
+    }
+
+    xhr.send();
+
+}
+
 function getProductList(){
+
+    if(localStorage.getItem('WFSAppUserToken') == null || localStorage.getItem('WFSAppUserToken') == undefined){
+        return "tokenError";
+    }
+
     var xhr = new XMLHttpRequest();
     
     var flagAsync = false;
@@ -159,7 +274,6 @@ function getProductList(){
         } 
         else { 
             var response = JSON.parse(xhr.responseText);
-            console.log(response);  
             productListMenu(response);            
         } 
        
@@ -167,6 +281,68 @@ function getProductList(){
     }
 
     xhr.send();
+}
+
+function addQuery(){
+    
+    if(document.getElementById('nameAdd').value == '' || document.getElementById('nameAdd').value == null) return;
+    if(document.getElementById('descriptionAdd').value == '') return;
+    if(document.getElementById('priceAdd').value == '') return;
+
+    var xhr = new XMLHttpRequest();
+    
+    var flagAsync = false;
+    xhr.open("POST", "api/product", flagAsync);
+
+    var product = {
+        price: document.getElementById('priceAdd').value,
+        description: document.getElementById('descriptionAdd').value,
+        name: document.getElementById('nameAdd').value,
+        id: 0
+    }
+
+    xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
+    xhr.setRequestHeader('User-token', localStorage.getItem('WFSAppUserToken'));
+    
+    xhr.onreadystatechange = function() {
+        if (this.readyState != 4) return;
+    
+        // по окончании запроса доступны:
+        // status, statusText
+        // responseText, responseXML (при content-type: text/xml)
+    
+        if (xhr.status !== 200) {  
+            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
+            alert("Ошибка сервера! Попробуйте ещё раз!")
+            return "RequestError";
+            alert("Ошибка сервера! Попробуйте обновить таблицу меню!");
+        } 
+        else { 
+            var response = xhr.responseText;
+
+            if(response == 'row_added'){
+                setTimeout(getProductList, 0);
+                return;
+            }
+
+            if(response == "tokenError"){
+
+                alert("Ошибка авторизации! Выполните повторный вход!");
+                localStorage.removeItem('WFSAppUserToken');
+                setTimeout(startPage, 0);
+                return;
+            }else{
+                alert("Неизвестная ошибка. Попробуйте ещё раз!");
+            }
+
+            
+
+        } 
+       
+        // получить результат из this.responseText или this.responseXML
+    }
+
+    xhr.send(JSON.stringify(product));
 }
 
 function mainMenu(){
@@ -202,7 +378,7 @@ function mainMenu(){
     var p2 = document.createElement('p');
     p2.innerText = "Список товаров";
     p2.className = "menuListItem";
-    p2.style = "text-decoration: underline #000000;";
+    p2.style = "text-decoration: underline #0400ff;";
 
     var p3 = document.createElement('p');
     p3.innerText = "Продажи";
