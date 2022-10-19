@@ -21,6 +21,15 @@ function displayMainPage(){
     btn_exit.className = "ExitButton";
 
     btn_exit.textContent = 'Exit';
+
+
+    mainpage.appendChild(btn_exit);
+    body.appendChild(mainpage);
+
+    var mainMenuDiv = mainMenu();
+
+    body.appendChild(mainMenuDiv);
+
     btn_exit.addEventListener("click", function(){
         localStorage.removeItem('WFSAppUserToken');
         body.removeChild(document.getElementById('mainPage'));
@@ -31,10 +40,7 @@ function displayMainPage(){
         startPage();
     });
 
-    mainpage.appendChild(btn_exit);
-    body.appendChild(mainpage);
-    body.appendChild(mainMenu());
-    getProductList();
+    setTimeout(getProductList, 0);
 }
 
 function tasksCalendar(){
@@ -59,10 +65,11 @@ function productListMenu(response){
         return;
     };
 
-    if(response == 'RequestError'){
-        alert("Ошибка сервера! Попробуйте ещё раз!");
+    if(response == 'RequestError' || response == 'undefinedError' || response == 'dataBaseError'){
+        alert("Ошибка сервера! Попробуйте ещё раз позднее!");
         return;
     };
+
 
     if(document.getElementById("productList") != null){
         body.removeChild(document.getElementById("productList"));
@@ -114,7 +121,7 @@ function productListMenu(response){
     divAdd.appendChild(btnAdd);
 
     var table = document.createElement('table');
-    table.className = 'productTable';
+    //table.className = 'productsTable';
 
     var th = document.createElement('tr');
 
@@ -140,6 +147,10 @@ function productListMenu(response){
     th.appendChild(tdh5);
 
     table.appendChild(th);
+
+    var divTable = document.createElement('div');
+    divTable.className = 'productsList';
+    divTable.appendChild(table);
 
     response.forEach(function(item, i, arr){
         var tr = document.createElement('tr');
@@ -178,7 +189,7 @@ function productListMenu(response){
 
     productListMenu.appendChild(divAdd);
     productListMenu.appendChild(div_delete);
-    productListMenu.appendChild(table);
+    productListMenu.appendChild(divTable);
     body.appendChild(productListMenu);
 }
 
@@ -194,12 +205,12 @@ function deleteRowsQuery(){
         }
     }
 
+    if(checkboxChecked.length <= 0) return "undefined";
+
     var xhr = new XMLHttpRequest();
     
     var flagAsync = false;
     xhr.open("DELETE", "api/products", flagAsync);
-
-    console.log(JSON.stringify(checkboxChecked));
 
     xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
     xhr.setRequestHeader('User-token', localStorage.getItem('WFSAppUserToken'));
@@ -218,7 +229,7 @@ function deleteRowsQuery(){
             return "RequestError";
         } 
         else { 
-            var response = xhr.responseText;
+            var response = JSON.parse(xhr.responseText);
 
             if(response == 'rows_deleted'){
                 setTimeout(getProductList, 0);
@@ -318,7 +329,8 @@ function addQuery(){
             alert("Ошибка сервера! Попробуйте обновить таблицу меню!");
         } 
         else { 
-            var response = xhr.responseText;
+            var response = JSON.parse(xhr.responseText);
+            console.log(response);
 
             if(response == 'row_added'){
                 setTimeout(getProductList, 0);
@@ -560,6 +572,10 @@ function authQuerry(username, password){
     
     xhr.onreadystatechange = function() {
         if (this.readyState != 4) return;
+
+        if(document.getElementById('waitLogin') != null){
+            document.getElementById('loginDiv').removeChild(document.getElementById('waitLogin'));
+        }
     
         // по окончании запроса доступны:
         // status, statusText
@@ -567,6 +583,7 @@ function authQuerry(username, password){
     
         if (xhr.status !== 200) {  
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
+            setTimeout(authLogic(response, username), 0);
         } 
         else { 
             //console.log(xhr.responseText);
@@ -577,10 +594,23 @@ function authQuerry(username, password){
         // получить результат из this.responseText или this.responseXML
     }
 
+    if(document.getElementById('waitLogin') == null){
+        var errP = document.createElement('p');
+        errP.id = 'waitLogin';
+        errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: blue; font-size: 0.8em; font-weight: bold;';
+        errP.innerText = 'Waiting for login...';
+        document.getElementById('loginDiv').appendChild(errP);
+    }
+
     xhr.send(JSON.stringify(authUser));
 }
 
 function authLogic(response){
+    if(response == "dataBaseError" || response == "undefinedError"){
+        alert("Ошибка сервера! Попробуйте ещё раз, или попробуйте позднее!");
+        return;
+    }
+
     if(response.payload !== null && response.payload !== undefined){
 
         localStorage.setItem('WFSAppUserToken', JSON.stringify(response));
@@ -636,8 +666,13 @@ function registerQuery(username, password, email){
     xhr.onreadystatechange = function() {//Call a function when the state changes.
         if(xhr.readyState != 4) return;
 
+        if(document.getElementById('waitReg') != null){
+            document.getElementById('registerDiv').removeChild(document.getElementById('waitReg'));
+        }
+
         if(xhr.status !== 200){
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
+            setTimeout(registerLogic(response), 0);
         }else{
             var response = JSON.parse(xhr.responseText);
             console.log(response);
@@ -645,10 +680,19 @@ function registerQuery(username, password, email){
         }
     }
 
+    if(document.getElementById('waitReg') == null){
+        var errP = document.createElement('p');
+        errP.id = 'waitReg';
+        errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: blue; font-size: 0.8em; font-weight: bold;';
+        errP.innerText = 'Waiting for registration...';
+        document.getElementById('registerDiv').appendChild(errP);
+    }
+
     xhr.send(JSON.stringify(user));
 }
 
 function registerLogic(response){
+
     if(response == "createUser_Ok_status"){
         if(document.getElementById('errRegister') == null){
             var errP = document.createElement('p');
@@ -666,7 +710,7 @@ function registerLogic(response){
             }
         }
 
-    }else if(response == "userIsExistStatus"){
+    }else if(response == "userIsExistStatus" || response == "undefinedError" || response == "dataBaseError"){
         if(document.getElementById('errRegister') == null){
             var errP = document.createElement('p');
             errP.id = 'errRegister';
@@ -677,7 +721,7 @@ function registerLogic(response){
         }else{
             if(document.getElementById('errRegister').innerText == 'Register is complete! Please, go back to login!'){
                 document.getElementById('errRegister').style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
-                document.getElementById('errRegister').innerText = 'User already exist or undefined error! Try another login or email!';
+                document.getElementById('errRegister').innerText = 'User already exist or Server error! Try another login or email or wait...';
             }
         }
     }else{
@@ -697,4 +741,4 @@ function registerLogic(response){
     }
 }
 
-startPage();
+setTimeout(startPage, 0);

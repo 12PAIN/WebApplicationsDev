@@ -39,13 +39,13 @@ public class Service {
   public Response authUser(String userJson) {
     User user;
     Jsonb jsonb = JsonbBuilder.create();
-    String resultJSON = "undefinedError";
+    String resultJSON = jsonb.toJson("undefinedError");
     try{
 
       try{
         user = jsonb.fromJson(userJson, new User(){}.getClass().getGenericSuperclass());
       }catch (Exception e) {
-        resultJSON = "Error while JSON transforming.";
+        resultJSON = jsonb.toJson("Error while JSON transforming.");
         throw new Exception("Error while JSON transforming.");  
       }
 
@@ -56,15 +56,15 @@ public class Service {
         DataBase.initDataBase();
         usrTrue = DataBase.isUserCorrect(user.getLogin(), user.getPassword());
 
-      }catch (java.sql.SQLException sqle){sqle.printStackTrace();}
-      catch (Exception ex){ex.printStackTrace();};
+      }catch (SQLException sqle){ return Response.ok(jsonb.toJson("dataBaseError")).build();}
+      catch (Exception ex){};
       
       if(usrTrue == true){
         Token token = Token.generateToken(user);
         
         resultJSON = jsonb.toJson(token);
       }else{
-        resultJSON = "false";
+        resultJSON = jsonb.toJson("false");
       }
 
       
@@ -84,7 +84,7 @@ public class Service {
   public Response getProductList(@HeaderParam("User-token") String userToken){
     Token token;
     Jsonb jsonb = JsonbBuilder.create();
-    String resultJSON = "undefinedError";
+    String resultJSON = jsonb.toJson("undefinedError");
     try{
 
       try{
@@ -94,17 +94,17 @@ public class Service {
         throw new Exception("Error while JSON transforming.");  
       }
 
-      Boolean usrTrue = null;
-
       if(Token.verifyToken(token)){
         try{
           DataBase.initDataBase();
           ArrayList<Product> productList = DataBase.selectProducts();
           resultJSON = jsonb.toJson(productList);
-        } catch(SQLException e){}
+        } catch(SQLException e){
+          resultJSON = jsonb.toJson("dataBaseError");
+        }
         catch(Exception e){};
       }else{
-        resultJSON = "tokenError";
+        resultJSON = jsonb.toJson("tokenError");
       }
 
     }catch (JsonbException e) {
@@ -120,11 +120,11 @@ public class Service {
   @Path("/product")
   @Consumes("application/json")
   @Produces("application/json")
-  public Response getProductList(@HeaderParam("User-token") String userToken, String newProduct){
+  public Response addProducts(@HeaderParam("User-token") String userToken, String newProduct){
     Token token;
     Product product;
     Jsonb jsonb = JsonbBuilder.create();
-    String resultJSON = "undefinedError";
+    String resultJSON = jsonb.toJson("undefinedError");
     try{
 
       try{
@@ -141,11 +141,11 @@ public class Service {
         try{
           DataBase.initDataBase();
           DataBase.addRow(product.getName(), product.getPrice(), product.getDescription());
-          resultJSON = "row_added";
+          resultJSON = jsonb.toJson("row_added");
         } catch(SQLException e){}
         catch(Exception e){};
       }else{
-        resultJSON = "tokenError";
+        resultJSON = jsonb.toJson("tokenError");
       }
 
     }catch (JsonbException e) {
@@ -164,7 +164,7 @@ public class Service {
     Token token;
     ArrayList<Integer> toDelete;
     Jsonb jsonb = JsonbBuilder.create();
-    String resultJSON = "undefinedError";
+    String resultJSON = jsonb.toJson("undefinedError");
     try{
 
       try{
@@ -181,11 +181,11 @@ public class Service {
         try{
           DataBase.initDataBase();
           DataBase.deleteRows(toDelete);
-          resultJSON = "rows_deleted";
+          resultJSON = jsonb.toJson("rows_deleted");
         } catch(SQLException e){}
         catch(Exception e){};
       }else{
-        resultJSON = "tokenError";
+        resultJSON = jsonb.toJson("tokenError");
       }
 
     }catch (JsonbException e) {
@@ -221,8 +221,8 @@ public class Service {
           if(userCreated == true) resultJSON = "createUser_Ok_status";
           else if (userCreated == false) resultJSON = "userIsExistStatus";
           
-        }catch (java.sql.SQLException sqle){resultJSON = "userIsExistStatus";}
-        catch (Exception ex){resultJSON ="userIsExistStatus";};
+        }catch (java.sql.SQLException sqle){return Response.ok(jsonb.toJson("dataBaseError")).build();}
+        catch (Exception ex){};
     }
     catch (JsonbException e) {
       return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             

@@ -61,11 +61,18 @@ table, th, td, tr{
     border-collapse: collapse;
     padding: 10px;
     gap: 12px;
+    max-height: 586px;
 }
+
+.productsList {
+    overflow-y:auto;
+    max-height: 586px;
+    height: fit-content;
+}
+
 
 .productList {
     
-
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -75,8 +82,11 @@ table, th, td, tr{
     position: fixed;
     width: fit-content;
     height: fit-content;
-    top: 2%;
-    left: 25%;
+    max-height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-60%, -60%);
+
 
     background: #A2FF93;
     mix-blend-mode: normal;
@@ -103,6 +113,7 @@ table, th, td, tr{
 .ExitButton {
     position: fixed;
     top: 2%;
+    background-color:#A2FF93;
     left: 98%;
     transform: translate(-50%, -50%);
 }

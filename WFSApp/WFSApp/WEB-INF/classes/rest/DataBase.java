@@ -3,8 +3,6 @@ package rest;
 import java.sql.*;
 import java.util.ArrayList;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 public class DataBase {
     private static DataBase instance;
     private static Connection conn = null;
@@ -33,6 +31,9 @@ public class DataBase {
     };
 
     public static boolean isUserCorrect(String login, String password) throws SQLException, SQLTimeoutException{
+
+        if(conn == null) return false;
+
         PreparedStatement statement = conn.prepareStatement("SELECT * FROM users");
         ResultSet resultSet = statement.executeQuery();
 
@@ -51,7 +52,8 @@ public class DataBase {
         return false;
     }
 
-    public static Boolean createUser(String login, String password, String email) throws SQLException, SQLTimeoutException{     
+    public static Boolean createUser(String login, String password, String email) throws SQLException, SQLTimeoutException{    
+        if(conn == null) return null; 
         String sqlInsert = "INSERT INTO users(login, password, email) Values (?, ?, ?)";
         PreparedStatement preparedStatement = conn.prepareStatement(sqlInsert);
         preparedStatement.setString(1, login);
