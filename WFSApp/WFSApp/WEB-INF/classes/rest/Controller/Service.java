@@ -1,5 +1,10 @@
-package rest;
+package rest.Controller;
 import jakarta.ws.rs.Path;
+
+import rest.Model.Product;
+import rest.Model.Token;
+import rest.Model.User;
+import rest.MySqlDatabase.DataBase;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -11,7 +16,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.HeaderParam;
 
 import jakarta.ws.rs.core.Response;
-
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;

@@ -1,4 +1,4 @@
-package rest;
+package rest.Model;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -44,8 +44,8 @@ public class Token{
         token.setPayload(payload);
 
         try{
-        Jsonb jsonb = JsonbBuilder.create();
-        token.setCrypto(jsonb.toJson(payload));
+            Jsonb jsonb = JsonbBuilder.create();
+            token.setCrypto(jsonb.toJson(payload));
         }catch(JsonbException e){}
 
         return token;
@@ -57,8 +57,8 @@ public class Token{
         token.setPayload(payload);
 
         try{
-        Jsonb jsonb = JsonbBuilder.create();
-        token.setCrypto(jsonb.toJson(payload));
+            Jsonb jsonb = JsonbBuilder.create();
+            token.setCrypto(jsonb.toJson(payload));
         }catch(JsonbException e){}
 
         return token;

@@ -1,5 +1,4 @@
-package rest;
-
+package rest.Model;
 
 public class Payload {
     private String login;

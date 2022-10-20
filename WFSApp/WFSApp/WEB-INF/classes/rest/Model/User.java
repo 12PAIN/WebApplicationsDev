@@ -1,4 +1,4 @@
-package rest;
+package rest.Model;
 
 public class User {
     private String login;
