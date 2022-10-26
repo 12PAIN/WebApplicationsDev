@@ -101,6 +101,9 @@ public class ConnectionPool implements IConnectionPool {
             
         }
 
+        if(newConn.isClosed() || newConn.isValid(0) == false) return null;
+        
+
         return checkConnReconnect(newConn);
 	}
 

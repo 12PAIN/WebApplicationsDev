@@ -82,6 +82,8 @@ public class ServiceUser {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("UserAlreadyExist").build();
             }
             
+            resultJSON = jsonb.toJson("userCreated");
+
         }
         catch (JsonbException e) {
         return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
