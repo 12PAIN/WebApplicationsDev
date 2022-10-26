@@ -1,7 +1,7 @@
-### Ping
+## Ping
 #### GET /api/ returns "OK!" - Ping
 
-### Products
+## Products
 #### GET /api/products/list/ - get product list
 
     Returns: 
@@ -28,7 +28,7 @@
         - 406 code if input json is null 
         - 200 code with Int (count of deleted rows) in json format if success
 
-### Users
+## Users
 #### POST api/users/auth/ - auth user with data
 
     Returns: 
