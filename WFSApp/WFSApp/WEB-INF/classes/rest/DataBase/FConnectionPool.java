@@ -1,7 +1,7 @@
 package rest.DataBase;
 
 public class FConnectionPool {
-    public IConnectionPool getConnectionPool(String url, String login, String password, String driver, int initConnCnt){
-        return ConnectionPool.initConnectionPool(url, driver, login, password, initConnCnt);
+    public IConnectionPool getConnectionPool(String url, String login, String password, String driver, Integer initConnCnt){
+        return ConnectionPool.initConnectionPool(url, login, password, driver, initConnCnt);
     }
 }

@@ -562,11 +562,12 @@ function authQuerry(username, password){
     
     var authUser = {
         login: username,
-        password: password
+        password: password,
+        email: null
     }
 
     var flagAsync = true;
-    xhr.open("POST", "api/auth", flagAsync);
+    xhr.open("POST", "api/users/auth", flagAsync);
 
     xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
     
@@ -581,12 +582,14 @@ function authQuerry(username, password){
         // status, statusText
         // responseText, responseXML (при content-type: text/xml)
     
-        if (xhr.status !== 200) {  
+        if (xhr.status !== 200) { 
+            console.log(xhr.status);
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
             setTimeout(authLogic(response, username), 0);
         } 
-        else { 
-            //console.log(xhr.responseText);
+        else {
+            console.log(xhr.status);
+            console.log(xhr.responseText);
             var response = JSON.parse(xhr.responseText);   
             setTimeout(authLogic(response, username), 0);
         } 

@@ -3,15 +3,15 @@ package rest.DataBase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.TreeSet;
+import java.util.Vector;
 import java.util.Random;
 
 public class ConnectionPool implements IConnectionPool {
     
     private static ConnectionPool instance;
 
-    private TreeSet<Connection> availableConns = new TreeSet<Connection>();
-    private TreeSet<Connection> usedConns = new TreeSet<Connection>();
+    private Vector<Connection> availableConns = new Vector<Connection>();
+    private Vector<Connection> usedConns = new Vector<Connection>();
     private String url;
     private String login;
     private String password;
@@ -26,7 +26,7 @@ public class ConnectionPool implements IConnectionPool {
 
         return instance;
     };
-
+    
     private ConnectionPool(String url, String login, String password, String driver, int initConnCnt) {
 		try{
 			Class.forName(driver);
@@ -41,24 +41,24 @@ public class ConnectionPool implements IConnectionPool {
         if(initConnCnt > maxConnectionsCount) initConnCnt = maxConnectionsCount;
 
 		for (int i = 0; i < initConnCnt; i++) {
-			availableConns.add(getConnection());
+			availableConns.addElement(getConnection());
 		}
 	}
 
     private Connection getConnection() {
-		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection(url, login, password);
+			return DriverManager.getConnection(url, login, password);
 		} catch (Exception e) {
 			e.printStackTrace();
+            return null;
 		}
-		return conn;
 	}
 
     private Connection checkConnReconnect(Connection conn) throws SQLException, NullPointerException{
         if(conn.isClosed() == true || conn == null || conn.isValid(0) == false){
             conn.close();
             conn = getConnection();
+            conn = checkConnReconnect(conn);
         }
 
         return conn;
@@ -73,7 +73,7 @@ public class ConnectionPool implements IConnectionPool {
             //If used conn count is not maximum
             if(usedConns.size() < maxConnectionsCount){
                 newConn = getConnection();
-                usedConns.add(newConn);
+                usedConns.addElement(newConn);
 
                 //If used conn count is maximum. Will return random of existing connections
             }else{
@@ -95,14 +95,11 @@ public class ConnectionPool implements IConnectionPool {
         }
         else{
 
-            newConn = (Connection)availableConns.last();
-            usedConns.add(newConn);
-            availableConns.remove(newConn);
+            newConn = (Connection)availableConns.lastElement();
+            usedConns.addElement(newConn);
+            availableConns.removeElement(newConn);
             
         }
-
-        if(newConn.isClosed() || newConn.isValid(0) == false) return null;
-        
 
         return checkConnReconnect(newConn);
 	}
@@ -110,8 +107,8 @@ public class ConnectionPool implements IConnectionPool {
     @Override
     public synchronized void putback(Connection c) throws NullPointerException {
         if (c != null) {
-            if (usedConns.remove(c)) {
-                availableConns.add(c);
+            if (usedConns.removeElement(c)) {
+                availableConns.addElement(c);
             } else {
                 throw new NullPointerException("Connection not in the usedConns");
             }			

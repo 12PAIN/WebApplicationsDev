@@ -29,12 +29,15 @@ public class DataBase implements IDataBase{
             ex.printStackTrace();
             return null;
         }
+        catch(NullPointerException ex){
+            return null;
+        }
        
     }
 
-    
     @Override
     public Boolean isUserCorrect(String login, String password){
+        
         try{
             Connection conn = getConnection();
 
@@ -101,6 +104,9 @@ public class DataBase implements IDataBase{
 
             return null;
         }
+        catch(NullPointerException ex){
+            return null;
+        }
     }
 
     @Override
@@ -127,6 +133,9 @@ public class DataBase implements IDataBase{
             }else return 0;
         }catch(SQLException ex){
             ex.printStackTrace();
+            return null;
+        }
+        catch(NullPointerException ex){
             return null;
         }
     }
@@ -173,6 +182,9 @@ public class DataBase implements IDataBase{
             ex.printStackTrace();
             return null;
         }
+        catch(NullPointerException ex){
+            return null;
+        }
     }
 
     @Override
@@ -210,6 +222,9 @@ public class DataBase implements IDataBase{
 
         }catch(SQLException ex){
             ex.printStackTrace();
+            return null;
+        }
+        catch(NullPointerException ex){
             return null;
         }
     }

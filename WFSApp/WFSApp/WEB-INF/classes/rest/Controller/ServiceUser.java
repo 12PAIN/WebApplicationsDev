@@ -28,6 +28,7 @@ public class ServiceUser {
     @Consumes("application/json")
     @Produces("application/json")
     public Response authUser(String userJson) {
+
         User user;
         Jsonb jsonb = JsonbBuilder.create();
         String resultJSON = jsonb.toJson("undefinedError");
@@ -37,6 +38,7 @@ public class ServiceUser {
             user = jsonb.fromJson(userJson, new User(){}.getClass().getGenericSuperclass());
             Boolean usrTrue = model.checkUser(user);
 
+            
             if(usrTrue == null){
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();
             }
@@ -50,11 +52,13 @@ public class ServiceUser {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("UserNotFound").build();
             }
 
+            resultJSON = jsonb.toJson(usrTrue);
+
         }catch (JsonbException e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
         }
         catch (Exception e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
         }    
         return Response.ok(resultJSON).build();
     }
