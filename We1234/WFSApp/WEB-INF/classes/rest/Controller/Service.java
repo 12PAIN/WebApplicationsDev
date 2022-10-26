@@ -1,4 +1,5 @@
 package rest.Controller;
+
 import jakarta.ws.rs.Path;
 
 import rest.Model.Product;

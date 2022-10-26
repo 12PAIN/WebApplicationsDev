@@ -1,13 +1,13 @@
-package rest.Model;
+package rest.Controller;
 
 public class Payload {
     private String login;
     private String email;
 
-    public static Payload generatePayload(User user){
+    public static Payload generatePayload(String login, String email){
         Payload payload = new Payload();
-        payload.setLogin(user.getLogin());
-        payload.setEmail(user.getEmail());
+        payload.setLogin(login);
+        payload.setEmail(email);
         return payload;
     }
 

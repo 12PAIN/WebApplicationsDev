@@ -1,9 +1,10 @@
-package rest.Model;
+package rest.Controller;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
 
+import rest.Model.User;
 
 public class Token{
 
