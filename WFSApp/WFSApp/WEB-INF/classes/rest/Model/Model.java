@@ -8,6 +8,23 @@ import rest.DataBase.IDataBase;
 public class Model implements IModel{
 
     @Override
+    public ArrayList<Product> GenerateProductList(ArrayList<ArrayList<String>> products){
+        ArrayList<Product> productList = new ArrayList<>();
+
+        for(ArrayList<String> product: products){
+            Product newProduct = new Product();
+            newProduct.setId(Integer.parseInt(product.get(0))); 
+            newProduct.setName(product.get(1)); 
+            newProduct.setPrice(Integer.parseInt(product.get(2))); 
+            newProduct.setDescription(product.get(3)); 
+
+            productList.add(newProduct);
+        }
+
+        return productList;
+    }
+
+    @Override
     public Integer addRow(Product newProduct){
 
         FDataBase dbFactory = new FDataBase();
@@ -58,7 +75,7 @@ public class Model implements IModel{
 
         FDataBase dbFactory = new FDataBase();
         IDataBase dataBase = dbFactory.initDataBase();
-        return Product.GenerateProductList(
+        return GenerateProductList(
             dataBase.selectProducts()
         );
     }

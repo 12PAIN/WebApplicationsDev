@@ -8,6 +8,8 @@ import java.util.Random;
 
 public class ConnectionPool implements IConnectionPool {
     
+    private static ConnectionPool instance;
+
     private TreeSet<Connection> availableConns = new TreeSet<Connection>();
     private TreeSet<Connection> usedConns = new TreeSet<Connection>();
     private String url;
@@ -16,8 +18,16 @@ public class ConnectionPool implements IConnectionPool {
 
 
     private int maxConnectionsCount = 15;
-    
-    public ConnectionPool(String url, String login, String password, String driver, int initConnCnt) {
+
+    public static synchronized ConnectionPool initConnectionPool(String url, String login, String password, String driver, int initConnCnt){
+        if(instance == null){
+            instance = new ConnectionPool(url, login, password, driver, initConnCnt);
+        }
+
+        return instance;
+    };
+
+    private ConnectionPool(String url, String login, String password, String driver, int initConnCnt) {
 		try{
 			Class.forName(driver);
 		} catch (Exception e) {

@@ -43,7 +43,7 @@ public class ServiceProducts {
             token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
             
 
-            if(Token.verifyToken(token)){
+            if(TokenTools.verifyToken(token)){
                 resultJSON = jsonb.toJson(model.getProductsList());
 
                 if(resultJSON == null) return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();
@@ -75,7 +75,7 @@ public class ServiceProducts {
             token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
             product = jsonb.fromJson(newProduct, new Product(){}.getClass().getGenericSuperclass());
         
-            if(Token.verifyToken(token)){
+            if(TokenTools.verifyToken(token)){
         
                 int row = model.addRow(product);
                 if(row == 1) resultJSON = jsonb.toJson("row_added");
@@ -111,7 +111,7 @@ public class ServiceProducts {
             
             if(toDelete == null) return Response.status(Response.Status.NOT_ACCEPTABLE).entity("NoData").build();
 
-        if(Token.verifyToken(token)){
+        if(TokenTools.verifyToken(token)){
 
             Integer rows = model.deleteRows(toDelete);
 

@@ -3,6 +3,7 @@ package rest.Model;
 import java.util.ArrayList;
 
 public interface IModel {
+    ArrayList<Product> GenerateProductList(ArrayList<ArrayList<String>> products);
     Boolean checkUser(User user);
     Boolean addUser(User newUser);
     Integer deleteRows(ArrayList<Integer> toDelete);

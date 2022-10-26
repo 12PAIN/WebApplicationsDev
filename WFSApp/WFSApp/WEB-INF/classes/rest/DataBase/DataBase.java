@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DataBase implements IDataBase{
-    private static DataBase instance;
 
     private String url = "jdbc:mysql://localhost:3306/lab_1?serverTimezone=Europe/Moscow&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true";
     private String login = "root";
@@ -15,21 +14,13 @@ public class DataBase implements IDataBase{
     private FConnectionPool factoryConnectionPool;
     private IConnectionPool connectionPool;
     
-    private DataBase(){
+    public DataBase(){
         try{
             factoryConnectionPool = new FConnectionPool();
             connectionPool = factoryConnectionPool.getConnectionPool(url, login, password, Driver, initConnectionCount);
         }catch(Exception ex){ex.printStackTrace();};     
     }
 
-    public static DataBase getInstance(){
-        if(instance == null){
-            instance = new DataBase(); 
-        }
-
-        return instance;
-    }
-    
     private Connection getConnection(){
         try{
             return connectionPool.retrieveConnection();
@@ -39,6 +30,7 @@ public class DataBase implements IDataBase{
         }
     }
 
+    
     @Override
     public Boolean isUserCorrect(String login, String password){
         try{

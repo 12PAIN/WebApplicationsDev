@@ -43,7 +43,7 @@ public class ServiceUser {
 
             if(usrTrue == true){
 
-                Token token = Token.generateToken(Payload.generatePayload(user.getLogin(), user.getEmail()));
+                Token token = TokenTools.generateToken(TokenTools.generatePayload(user.getLogin(), user.getEmail()));
                 resultJSON = jsonb.toJson(token);
 
             }else{

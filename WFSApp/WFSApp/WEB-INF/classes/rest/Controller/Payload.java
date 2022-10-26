@@ -4,13 +4,6 @@ public class Payload {
     private String login;
     private String email;
 
-    public static Payload generatePayload(String login, String email){
-        Payload payload = new Payload();
-        payload.setLogin(login);
-        payload.setEmail(email);
-        return payload;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
