@@ -24,10 +24,12 @@ public class DataBase implements IDataBase{
     private Connection getConnection(){
         try{
             return connectionPool.retrieveConnection();
-        }catch(SQLException ex){
+        }
+        catch(SQLException ex){
             ex.printStackTrace();
             return null;
         }
+       
     }
 
     
@@ -94,6 +96,9 @@ public class DataBase implements IDataBase{
 
         }catch(SQLException ex){
             ex.printStackTrace();
+
+            if(ex.getSQLState() == "23505") return false;
+
             return null;
         }
     }
@@ -198,7 +203,8 @@ public class DataBase implements IDataBase{
                 
                 connectionPool.putback(conn);
 
-                return strResultSet;
+                if(strResultSet.size() > 0) return strResultSet;
+                else return null;
 
             }else return null;
 
