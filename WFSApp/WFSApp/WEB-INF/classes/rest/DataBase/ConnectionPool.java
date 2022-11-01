@@ -56,10 +56,13 @@ public class ConnectionPool implements IConnectionPool {
 
     private Connection checkConnReconnect(Connection conn) throws SQLException, NullPointerException{
         if(conn.isClosed() == true || conn == null || conn.isValid(0) == false){
+            usedConns.removeElement(conn);
             conn.close();
             conn = getConnection();
-            conn = checkConnReconnect(conn);
+
         }
+
+        usedConns.add(conn);
 
         return conn;
     }
@@ -105,12 +108,12 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
     @Override
-    public synchronized void putback(Connection c) throws NullPointerException {
+    public synchronized void putback(Connection c) throws NullPointerException{
         if (c != null) {
             if (usedConns.removeElement(c)) {
                 availableConns.addElement(c);
             } else {
-                throw new NullPointerException("Connection not in the usedConns");
+                throw new NullPointerException("This conn is not in usedConns");
             }			
         }
     }
