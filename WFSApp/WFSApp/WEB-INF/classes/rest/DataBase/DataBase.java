@@ -38,11 +38,14 @@ public class DataBase implements IDataBase{
     @Override
     public Boolean isUserCorrect(String login, String password){
         
+        Connection conn = getConnection();
+
         try{
-            Connection conn = getConnection();
+            
 
             if(conn != null){
-                PreparedStatement statement = conn.prepareStatement("SELECT * FROM users");
+                PreparedStatement statement = conn.prepareStatement("SELECT * FROM users where login = (?)");
+                statement.setString(1, login);
                 ResultSet resultSet = statement.executeQuery();
 
                 while(resultSet.next()){
@@ -62,12 +65,15 @@ public class DataBase implements IDataBase{
 
                 return false;
             }else{
+
+                connectionPool.putback(conn);
                 return null;
             }
 
             
 
         }catch(SQLException ex){
+            connectionPool.putback(conn);
             ex.printStackTrace();
             return null;
         }
@@ -75,8 +81,10 @@ public class DataBase implements IDataBase{
 
     @Override
     public Boolean createUser(String login, String password, String email){    
+        
+        Connection conn = getConnection();
+
         try{
-            Connection conn = getConnection();
 
             if(conn != null){
 
@@ -95,25 +103,31 @@ public class DataBase implements IDataBase{
                 if(rows != 0){ return true;}
                 else return false;
 
-            }else return null;
+            }else{ 
+                connectionPool.putback(conn);
+                return null;
+            }
 
         }catch(SQLException ex){
             ex.printStackTrace();
-
-            if(ex.getSQLState() == "23505") return false;
+            connectionPool.putback(conn);
+            if(Integer.parseInt(ex.getSQLState()) == 23505 || Integer.parseInt(ex.getSQLState()) == 23000) return false;
 
             return null;
         }
         catch(NullPointerException ex){
+            connectionPool.putback(conn);
             return null;
         }
     }
 
     @Override
-    public Integer addRow(String name, Integer price, String description){    
+    public Integer addRow(String name, int price, String description){    
+        
+        Connection conn = getConnection();
         try{
-            if(name != null && price != null && description != null){
-                Connection conn = getConnection();
+            if(name != null && description != null){
+                
             
                 if(conn != null){
                     String sqlInsert = "INSERT INTO products(ProductName, Price, Description) Values (?, ?, ?)";
@@ -129,19 +143,29 @@ public class DataBase implements IDataBase{
 
                     connectionPool.putback(conn);
                     return rows;
-                }else return null;
-            }else return 0;
+                }else{
+                    connectionPool.putback(conn);
+                    return null;
+                }
+            }else{ 
+                connectionPool.putback(conn);
+                return 0;
+            }
         }catch(SQLException ex){
+            connectionPool.putback(conn);
             ex.printStackTrace();
             return null;
         }
         catch(NullPointerException ex){
+            connectionPool.putback(conn);
             return null;
         }
     }
 
     @Override
     public Integer deleteRows(ArrayList<Integer> to_delete){
+        
+        Connection conn = getConnection();
         try{
             
             if(to_delete != null){
@@ -152,22 +176,17 @@ public class DataBase implements IDataBase{
 
                 String toDeleteStr = "";
 
-                Connection conn = getConnection();
-
                 if(conn != null){
                     PreparedStatement preparedStatement = conn.prepareStatement(sqlDelete);
-                    boolean first = true;
                     for(Integer to_delete_row: to_delete){
-                        if(first != true) toDeleteStr += ", " + String.valueOf(to_delete_row);
-                        else{
-                            first = false;
-                            toDeleteStr += String.valueOf(to_delete_row);
-                        }
+
+                            toDeleteStr = String.valueOf(to_delete_row);
+
+                            preparedStatement.setString(1, toDeleteStr);
+
+                            rows += preparedStatement.executeUpdate();
+
                     }
-
-                    preparedStatement.setString(1, toDeleteStr);
-
-                    rows = preparedStatement.executeUpdate();
 
                     preparedStatement.close();
 
@@ -176,21 +195,29 @@ public class DataBase implements IDataBase{
                 connectionPool.putback(conn);
                 return rows;
 
-            }else return 0;
+            }else {
+                connectionPool.putback(conn);
+                return 0;
+            }
 
         }catch(SQLException ex){
+            connectionPool.putback(conn);
             ex.printStackTrace();
             return null;
         }
         catch(NullPointerException ex){
+            connectionPool.putback(conn);
             return null;
         }
     }
 
     @Override
     public ArrayList<ArrayList<String>> selectProducts(){
+        
+        Connection conn = getConnection();
+        
         try{
-            Connection conn = getConnection();
+            
 
             if(conn != null){
 
@@ -215,16 +242,20 @@ public class DataBase implements IDataBase{
                 
                 connectionPool.putback(conn);
 
-                if(strResultSet.size() > 0) return strResultSet;
-                else return null;
+                return strResultSet;
 
-            }else return null;
+            }else{ 
+                connectionPool.putback(conn);
+                return null;
+            }
 
         }catch(SQLException ex){
+            connectionPool.putback(conn);
             ex.printStackTrace();
             return null;
         }
         catch(NullPointerException ex){
+            connectionPool.putback(conn);
             return null;
         }
     }

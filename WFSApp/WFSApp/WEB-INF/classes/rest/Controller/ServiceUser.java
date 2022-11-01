@@ -52,8 +52,6 @@ public class ServiceUser {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("UserNotFound").build();
             }
 
-            resultJSON = jsonb.toJson(usrTrue);
-
         }catch (JsonbException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
         }

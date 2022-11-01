@@ -40,7 +40,12 @@ public class ServiceProducts {
 
         try{
             
-            token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
+            try{
+                token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
+                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+            }catch(JsonbException e){
+                return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+            }
             
 
             if(TokenTools.verifyToken(token)){
@@ -72,7 +77,12 @@ public class ServiceProducts {
         String resultJSON = jsonb.toJson("undefinedError");
         try{
 
-            token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
+            try{
+                token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
+                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+            }catch(JsonbException e){
+                return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+            }
             product = jsonb.fromJson(newProduct, new Product(){}.getClass().getGenericSuperclass());
         
             if(TokenTools.verifyToken(token)){
@@ -106,7 +116,12 @@ public class ServiceProducts {
         String resultJSON = jsonb.toJson("undefinedError");
         try{
 
-            token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
+            try{
+                token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
+                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+            }catch(JsonbException e){
+                return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+            }
             toDelete = jsonb.fromJson(toDeleteJSON, new ArrayList<Integer>(){}.getClass().getGenericSuperclass());
             
             if(toDelete == null) return Response.status(Response.Status.NOT_ACCEPTABLE).entity("NoData").build();

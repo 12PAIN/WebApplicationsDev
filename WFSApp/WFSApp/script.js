@@ -210,7 +210,7 @@ function deleteRowsQuery(){
     var xhr = new XMLHttpRequest();
     
     var flagAsync = false;
-    xhr.open("DELETE", "api/products", flagAsync);
+    xhr.open("DELETE", "api/products/", flagAsync);
 
     xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
     xhr.setRequestHeader('User-token', localStorage.getItem('WFSAppUserToken'));
@@ -224,14 +224,18 @@ function deleteRowsQuery(){
         // responseText, responseXML (при content-type: text/xml)
     
         if (xhr.status !== 200) {  
+            console.log(xhr.status);
+            console.log(xhr.responseText);
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
             alert("Ошибка сервера! Попробуйте ещё раз!")
             return "RequestError";
         } 
         else { 
             var response = JSON.parse(xhr.responseText);
-
-            if(response == 'rows_deleted'){
+            console.log(xhr.status);
+            console.log(xhr.responseText);
+            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
+            if(typeof response == "number" ){
                 setTimeout(getProductList, 0);
                 return;
             }
@@ -266,7 +270,7 @@ function getProductList(){
     var xhr = new XMLHttpRequest();
     
     var flagAsync = false;
-    xhr.open("GET", "api/productList", flagAsync);
+    xhr.open("GET", "api/products/list", flagAsync);
 
     xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
     xhr.setRequestHeader('User-token', localStorage.getItem('WFSAppUserToken'));
@@ -279,11 +283,16 @@ function getProductList(){
         // responseText, responseXML (при content-type: text/xml)
     
         if (xhr.status !== 200) {  
+            console.log(xhr.status);
+            console.log(xhr.responseText);
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
             return "RequestError";
             alert("Ошибка сервера! Попробуйте обновить таблицу меню!");
         } 
         else { 
+            console.log(xhr.status);
+            console.log(xhr.responseText);
+            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
             var response = JSON.parse(xhr.responseText);
             productListMenu(response);            
         } 
@@ -303,7 +312,7 @@ function addQuery(){
     var xhr = new XMLHttpRequest();
     
     var flagAsync = false;
-    xhr.open("POST", "api/product", flagAsync);
+    xhr.open("POST", "api/products/", flagAsync);
 
     var product = {
         price: document.getElementById('priceAdd').value,
@@ -323,6 +332,8 @@ function addQuery(){
         // responseText, responseXML (при content-type: text/xml)
     
         if (xhr.status !== 200) {  
+            console.log(xhr.status);
+            console.log(xhr.responseText);
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
             alert("Ошибка сервера! Попробуйте ещё раз!")
             return "RequestError";
@@ -330,7 +341,9 @@ function addQuery(){
         } 
         else { 
             var response = JSON.parse(xhr.responseText);
-            console.log(response);
+            console.log(xhr.status);
+            console.log(xhr.responseText);
+            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
 
             if(response == 'row_added'){
                 setTimeout(getProductList, 0);
@@ -584,6 +597,7 @@ function authQuerry(username, password){
     
         if (xhr.status !== 200) { 
             console.log(xhr.status);
+            console.log(xhr.responseText);
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
             setTimeout(authLogic(response, username), 0);
         } 
@@ -661,7 +675,7 @@ function registerQuery(username, password, email){
 
     var xhr = new XMLHttpRequest();
     var flagAsync = true;
-    var uri = "./api/user";
+    var uri = "./api/users/";
 
     xhr.open("POST", uri, flagAsync)
     xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
@@ -674,11 +688,15 @@ function registerQuery(username, password, email){
         }
 
         if(xhr.status !== 200){
+            console.log(xhr.status);
+            console.log(xhr.responseText);
             console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
             setTimeout(registerLogic(response), 0);
         }else{
             var response = JSON.parse(xhr.responseText);
-            console.log(response);
+            console.log(xhr.status);
+            console.log(xhr.responseText);
+            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
             setTimeout(registerLogic(response), 0);
         }
     }
