@@ -17,6 +17,8 @@ import rest.Model.User;
 import rest.Model.IModel;
 import jakarta.inject.Inject;
 
+import java.util.ArrayList;
+
 @Path("/users")
 public class ServiceUser {
 
@@ -36,16 +38,16 @@ public class ServiceUser {
         try{
 
             user = jsonb.fromJson(userJson, new User(){}.getClass().getGenericSuperclass());
-            Boolean usrTrue = model.checkUser(user);
+            ArrayList<String> userData = model.checkUser(user);
 
             
-            if(usrTrue == null){
+            if(userData == null){
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();
             }
 
-            if(usrTrue == true){
+            if(userData.get(0) == "true"){
 
-                Token token = TokenTools.generateToken(TokenTools.generatePayload(user.getLogin(), user.getEmail()));
+                Token token = TokenTools.generateToken(TokenTools.generatePayload(user.getLogin(), userData.get(1)));
                 resultJSON = jsonb.toJson(token);
 
             }else{

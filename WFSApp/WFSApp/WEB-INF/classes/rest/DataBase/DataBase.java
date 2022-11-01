@@ -36,7 +36,7 @@ public class DataBase implements IDataBase{
     }
 
     @Override
-    public Boolean isUserCorrect(String login, String password){
+    public ArrayList<String> isUserCorrect(String login, String password){
         
         Connection conn = getConnection();
 
@@ -48,22 +48,23 @@ public class DataBase implements IDataBase{
                 statement.setString(1, login);
                 ResultSet resultSet = statement.executeQuery();
 
-                while(resultSet.next()){
-                    if(resultSet.getString("login").equals(login)){
-                        if(resultSet.getString("password").equals(password)){
-                            statement.close();
-                            resultSet.close();
-                            return true;
-                        }
-                    } else{continue;}
-                }
+                ArrayList<String> userData = new ArrayList<>();
+
+                if(resultSet.isBeforeFirst()){
+                    resultSet.next();
+                    if(resultSet.getString("password").equals(password)){
+                        userData.add(0, "true");
+                        userData.add(1, resultSet.getString("email"));
+                    }
+                    else userData.add(0, "false");
+                } else userData.add(0, "false");
+                
 
                 statement.close();
                 resultSet.close();
-
                 connectionPool.putback(conn);
 
-                return false;
+                return userData;
             }else{
 
                 connectionPool.putback(conn);

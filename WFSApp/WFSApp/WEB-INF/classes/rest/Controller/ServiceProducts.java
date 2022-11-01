@@ -109,7 +109,7 @@ public class ServiceProducts {
     @DELETE
     @Path("/")
     @Produces("application/json")
-    public Response deleteProducts(@HeaderParam("User-token") String userToken,@HeaderParam("To-delete-rows") String toDeleteJSON){
+    public Response deleteProducts(@HeaderParam("User-token") String userToken, @HeaderParam("To_Delete_IDs") String toDeleteJSON){
         Token token;
         ArrayList<Integer> toDelete;
         Jsonb jsonb = JsonbBuilder.create();

@@ -16,6 +16,7 @@ public class ConnectionPool implements IConnectionPool {
     private String login;
     private String password;
 
+    private int errorCount = 0;
 
     private int maxConnectionsCount = 15;
 
@@ -55,11 +56,17 @@ public class ConnectionPool implements IConnectionPool {
 	}
 
     private Connection checkConnReconnect(Connection conn) throws SQLException, NullPointerException{
+                
         if(conn.isClosed() == true || conn == null || conn.isValid(0) == false){
             usedConns.removeElement(conn);
             conn.close();
             conn = getConnection();
+            errorCount++;
+        }
 
+        if(errorCount > 10){
+            closeConnections();
+            errorCount = 0;
         }
 
         usedConns.add(conn);
@@ -67,9 +74,29 @@ public class ConnectionPool implements IConnectionPool {
         return conn;
     }
 
+    private void closeConnections(){
+        for(Connection conn : usedConns){
+            try{
+                conn.close();
+            }catch(SQLException ex){}
+        }
+
+        usedConns.clear();
+
+        for(Connection conn : availableConns){
+            try{
+                conn.close();
+            }catch(SQLException ex){}
+        }
+
+        availableConns.clear();
+    }
+
+
     @Override
     public synchronized Connection retrieveConnection() throws SQLException, NullPointerException {
-		Connection newConn = null;
+        
+        Connection newConn = null;
 
         if (availableConns.size() == 0) {
 

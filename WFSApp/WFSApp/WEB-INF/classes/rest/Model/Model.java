@@ -40,7 +40,7 @@ public class Model implements IModel{
     };
 
     @Override
-    public Boolean checkUser(User user){
+    public ArrayList<String> checkUser(User user){
 
         FDataBase dbFactory = new FDataBase();
         IDataBase dataBase = dbFactory.initDataBase();

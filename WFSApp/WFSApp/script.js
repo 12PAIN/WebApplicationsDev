@@ -570,6 +570,11 @@ function loginButtonClicked(){
     else authQuerry(document.getElementById('login').value, document.getElementById('password').value);
 }
 
+function callback(responseText, queryStatus){
+    console.log(responseText);
+    console.log(queryStatus);
+}
+
 function authQuerry(username, password){
     var xhr = new XMLHttpRequest();
     
@@ -579,47 +584,15 @@ function authQuerry(username, password){
         email: null
     }
 
-    var flagAsync = true;
-    xhr.open("POST", "api/users/auth", flagAsync);
+    var response;
+    var status;
 
-    xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
-    
-    xhr.onreadystatechange = function() {
-        if (this.readyState != 4) return;
+    model.authQuery(authUser, callback);
 
-        if(document.getElementById('waitLogin') != null){
-            document.getElementById('loginDiv').removeChild(document.getElementById('waitLogin'));
-        }
-    
-        // по окончании запроса доступны:
-        // status, statusText
-        // responseText, responseXML (при content-type: text/xml)
-    
-        if (xhr.status !== 200) { 
-            console.log(xhr.status);
-            console.log(xhr.responseText);
-            console.log( "Request error: " + xhr.status + ': ' + xhr.statusText );
-            setTimeout(authLogic(response, username), 0);
-        } 
-        else {
-            console.log(xhr.status);
-            console.log(xhr.responseText);
-            var response = JSON.parse(xhr.responseText);   
-            setTimeout(authLogic(response, username), 0);
-        } 
-       
-        // получить результат из this.responseText или this.responseXML
-    }
+    console.log(response);
+    console.log(status);
 
-    if(document.getElementById('waitLogin') == null){
-        var errP = document.createElement('p');
-        errP.id = 'waitLogin';
-        errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: blue; font-size: 0.8em; font-weight: bold;';
-        errP.innerText = 'Waiting for login...';
-        document.getElementById('loginDiv').appendChild(errP);
-    }
-
-    xhr.send(JSON.stringify(authUser));
+    return null;
 }
 
 function authLogic(response){
