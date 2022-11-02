@@ -41,22 +41,41 @@ var pageMain = (function() {
         if(status == 200) {
             getProductList();
             return;
-        } else if(status == 401) {
+        }
+        
+        if(status == 401) {
             localStorage.removeItem('WFSAppUserToken');
             renderPage();
             return;
-        } else {
+        }
+        
+        if(status == 400){
+            alert("Вы ввели неправильные данные!");
             getProductList();
             return;
         }
+
+        getProductList();
+        return;
     }
     
     function addButtonClicked() {
         var product = {
             name: document.getElementById('ProductName').value,
+            id: undefined,
             price: document.getElementById('Price').value,
             description: document.getElementById('Description').value,
         }
+
+        if(product.name == undefined || product.name == null || product.name == ''){
+            addButtonClickedCallback(400);
+            return;
+        }
+        if(product.price == undefined || product.price == null || product.price == ''){
+            addButtonClickedCallback(400);
+            return;
+        }
+        
         model.addProduct(product, addButtonClickedCallback);
     }
 

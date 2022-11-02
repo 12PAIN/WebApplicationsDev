@@ -87,8 +87,10 @@ var model = (function() {
             method: "POST",
             uri: "./api/products/",
             flagAsync: true,
-            data: JSON.stringify(product),
+            data: undefined
         }
+
+        queryData.data = JSON.stringify(product);
 
         var xhr = new XMLHttpRequest();
 

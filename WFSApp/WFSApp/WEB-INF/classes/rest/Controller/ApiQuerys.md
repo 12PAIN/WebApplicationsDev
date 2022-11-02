@@ -15,7 +15,7 @@
     Returns: 
         - 401 code If token expired 
         - 503 code if database is not available 
-        - 400 code if json cannot be serialized 
+        - 400 code if json cannot be serialized (data undefined)
         - 200 code with "row_added" in json format if success
 
 #### DELETE /api/products/ - delete products
