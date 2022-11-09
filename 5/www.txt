@@ -1,0 +1,14 @@
+О стандартах
+https://tproger.ru/translations/wtf-is-ecmascript/
+
+Основы ES6
+https://monsterlessons.com/project/series/es6-dlya-nachinayushih
+https://habr.com/ru/post/305900/
+
+Подробнее о классах
+https://learn.javascript.ru/classes
+ Видео
+  https://www.youtube.com/watch?v=FHGyblLVbaE
+
+Подробнее о модулях
+https://learn.javascript.ru/modules

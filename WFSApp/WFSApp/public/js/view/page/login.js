@@ -1,4 +1,7 @@
-var pageLogin = (function() {
+import { userModel } from "../../apiModel/userModel.js";
+import router from "../router.js";
+
+export default (function() {
     var root = undefined;
 
     function mainPageDisplay() {
@@ -66,7 +69,10 @@ var pageLogin = (function() {
             password: password,
             email: undefined
         }
-        model.authQuery(user, authQuerryCallback);
+
+        userModel.setUser(user);
+        userModel.setCallback(authQuerryCallback);
+        userModel._authQuery();
     }
 
     function loginPageDisplay() {

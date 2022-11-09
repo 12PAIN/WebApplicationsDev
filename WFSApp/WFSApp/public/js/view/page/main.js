@@ -1,5 +1,8 @@
-var pageMain = (function() {
-    var root = undefined;
+import router from "../router.js";
+import { productModel as model } from "../../apiModel/productsModel.js";
+
+export default (function() {
+    let root = undefined;
 
     function loginPageDisplay() {
         router.render("loginPage");
@@ -25,16 +28,17 @@ var pageMain = (function() {
 
         if(document.getElementsByClassName('checkboxToDelete') == null) return;
 
-        var checkboxes = document.getElementsByClassName('checkboxToDelete');
-        var checkboxChecked = [];
+        let checkboxes = document.getElementsByClassName('checkboxToDelete');
+        let checkboxChecked = [];
 
-        for (var index = 0; index < checkboxes.length; index++) {
+        for (let index = 0; index < checkboxes.length; index++) {
             if (checkboxes[index].checked) {
                 checkboxChecked.push(checkboxes[index].value);
             }
         }
 
-        model.deleteProduct(JSON.stringify(checkboxChecked), deleteButtonClickedCallback);
+        model.setCallback(deleteButtonClickedCallback);
+        model._deleteProduct(JSON.stringify(checkboxChecked));
     }
 
     function addButtonClickedCallback(status) {
@@ -60,7 +64,7 @@ var pageMain = (function() {
     }
     
     function addButtonClicked() {
-        var product = {
+        let product = {
             name: document.getElementById('ProductName').value,
             id: undefined,
             price: document.getElementById('Price').value,
@@ -76,7 +80,9 @@ var pageMain = (function() {
             return;
         }
         
-        model.addProduct(product, addButtonClickedCallback);
+        model.setProduct(product);
+        model.setCallback(addButtonClickedCallback);
+        model._addProduct();
     }
 
     function getProductsListCallback(response, status) {
@@ -89,32 +95,32 @@ var pageMain = (function() {
             if(document.getElementById("productList") != null){
                 root.removeChild(document.getElementById("productList"));
             }
-            var productListMenu = document.createElement('div');
+            let productListMenu = document.createElement('div');
             productListMenu.id = 'productList';
             productListMenu.className = 'productList';
         
-            var inpProductName = document.createElement('input');
+            let inpProductName = document.createElement('input');
             inpProductName.className = "inpProductName-mainPageDisplay WrapCenteredInlineBlock";
             inpProductName.placeholder = "ProductName";
             inpProductName.id = "ProductName";
         
-            var inpPrice = document.createElement('input');
+            let inpPrice = document.createElement('input');
             inpPrice.className = "inpPrice-mainPageDisplay WrapCenteredInlineBlock";
             inpPrice.placeholder = "Price";
             inpPrice.id = "Price";
         
-            var inpDescription = document.createElement('input');
+            let inpDescription = document.createElement('input');
             inpDescription.className = "inpDescription-mainPageDisplay WrapCenteredInlineBlock";
             inpDescription.placeholder = "Description";
             inpDescription.id = "Description";
         
-            var btnAdd = document.createElement('button');
+            let btnAdd = document.createElement('button');
             btnAdd.className = "btnAdd-mainPageDisplay WrapCenteredInlineBlock";
             btnAdd.textContent = 'Add';
             btnAdd.type = 'submit';
             btnAdd.addEventListener("click", addButtonClicked);
         
-            var divAdd = document.createElement('div');
+            let divAdd = document.createElement('div');
             divAdd.className = 'productListAdd';
         
             divAdd.appendChild(inpProductName);
@@ -122,22 +128,22 @@ var pageMain = (function() {
             divAdd.appendChild(inpDescription);
             divAdd.appendChild(btnAdd);
 
-            var deleteButton = document.createElement('button');
+            let deleteButton = document.createElement('button');
             deleteButton.textContent = "Удалить";
             deleteButton.addEventListener("click", deleteButtonClicked)
         
-            var table = document.createElement('table');
+            let table = document.createElement('table');
             table.className = "table-mainPageDisplay WrapCenteredInlineBlock";
-            var th = document.createElement('tr');
-            var tdh1 = document.createElement('th');
+            let th = document.createElement('tr');
+            let tdh1 = document.createElement('th');
             tdh1.innerText = "ID";
-            var tdh2 = document.createElement('th');
+            let tdh2 = document.createElement('th');
             tdh2.innerText = "ProductName";
-            var tdh3 = document.createElement('th');
+            let tdh3 = document.createElement('th');
             tdh3.innerText = "Price";
-            var tdh4 = document.createElement('th');
+            let tdh4 = document.createElement('th');
             tdh4.innerText = "Description";
-            var tdh5 = document.createElement('th');
+            let tdh5 = document.createElement('th');
             tdh5.innerText = "Delete?";
         
             th.appendChild(tdh1);
@@ -148,18 +154,18 @@ var pageMain = (function() {
             table.appendChild(th);
         
             response.forEach(function(item){
-                var tr = document.createElement('tr');
-                var td1 = document.createElement('td');
+                let tr = document.createElement('tr');
+                let td1 = document.createElement('td');
                 td1.innerText = item.id;
-                var td2 = document.createElement('td');
+                let td2 = document.createElement('td');
                 td2.innerText = item.name;
-                var td3 = document.createElement('td');
+                let td3 = document.createElement('td');
                 td3.innerText = item.price;
-                var td4 = document.createElement('td');
+                let td4 = document.createElement('td');
                 td4.innerText = item.description;
-                var td5 = document.createElement('td');
+                let td5 = document.createElement('td');
 
-                var currentInput = document.createElement('input');
+                let currentInput = document.createElement('input');
                 currentInput.type = 'checkbox';
                 currentInput.className = 'checkboxToDelete';
                 currentInput.name = 'to_delete';
@@ -188,17 +194,18 @@ var pageMain = (function() {
     }
 
     function getProductList() {
-        model.getProductsList(getProductsListCallback);
+        model.setCallback(getProductsListCallback);
+        model._getProductsList();
     }
 
     function mainPageDisplay() {
 
         root.innerHTML = '';
     
-        var mainpage = document.createElement('div');
+        let mainpage = document.createElement('div');
         mainpage.id = 'mainPage';
     
-        var btn_exit = document.createElement('button');
+        let btn_exit = document.createElement('button');
         btn_exit.className = "ExitButton";
     
         btn_exit.textContent = 'Exit';

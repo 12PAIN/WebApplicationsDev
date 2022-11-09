@@ -1,4 +1,7 @@
-var pageRegister = (function() {
+import router from "../router.js";
+import { userModel } from "../../apiModel/userModel.js";
+
+export default (function() {
     var root = undefined;
 
     function loginButtonClicked() {
@@ -61,7 +64,10 @@ var pageRegister = (function() {
             email: email
         };
 
-        model.registerQuery(user, registerQuerryCallback);
+        userModel.setUser(user);
+        userModel.setCallback(registerQuerryCallback);
+
+        userModel._registerQuery();
     }
 
     function registerPageDisplay() {

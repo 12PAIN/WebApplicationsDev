@@ -1,29 +1,33 @@
-var router = (function() {
-    
-    var root;
+import pageLogin from "./page/login.js";
+import pageRegister from "./page/register.js";
+import pageMain from "./page/main.js"
 
-    var loginPage = {
+export default (function() {
+    
+    let root;
+
+    let loginPage = {
         id: "loginPage",
         render: function (root) {
             pageLogin.render(root);
         }
     };
 
-    var registerPage = {
+    let registerPage = {
         id: "registerPage",
         render: function (root) {
             pageRegister.render(root);
         }
     };
 
-    var mainPage = {
+    let mainPage = {
         id: "mainPage",
         render: function (root) {
             pageMain.render(root);
         }
     };
 
-    pages = [loginPage, registerPage, mainPage]
+    let pages = [loginPage, registerPage, mainPage]
 
     function _startPage(rootParam) {
         root = rootParam
@@ -31,7 +35,7 @@ var router = (function() {
     }
 
     function _renderPage(pageId) {
-        for (var i = 0; i < pages.length; i++) {
+        for (let i = 0; i < pages.length; i++) {
             if (pages[i].id == pageId) {
                 pages[i].render(root);
             }
