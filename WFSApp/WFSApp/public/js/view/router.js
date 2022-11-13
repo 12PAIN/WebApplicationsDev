@@ -1,6 +1,6 @@
 import pageLogin from "./page/login.js";
 import pageRegister from "./page/register.js";
-import pageMain from "./page/main.js"
+import pageMain from "./page/main.js";  
 
 export default (function() {
     

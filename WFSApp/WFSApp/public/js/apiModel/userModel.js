@@ -1,20 +1,15 @@
-const userModel = (function (){
-
-    class User{
-        constructor(){
-            this.user = undefined;
-            this.callbackLink = undefined;
-        }
-
-        setUser(usr){
-            this.user = usr;
-        }
-
-        setCallback(newCallback){
-            this.callbackLink = newCallback;
-        }
-
-        _authQuery(){
+class User{
+    constructor(){
+        this.user = undefined;
+        this.callbackLink = undefined;
+    }
+    setUser(usr){
+        this.user = usr;
+    }
+    setCallback(newCallback){
+        this.callbackLink = newCallback;
+    }
+    _authQuery(){
 
             let queryData = {
                 method: "POST",
@@ -40,9 +35,8 @@ const userModel = (function (){
             }
     
             xhr.send(queryData.data);
-        }
-
-        _registerQuery(){
+    }
+    _registerQuery(){
             let queryData = {
                 method: "POST",
                 uri: "./api/users/",
@@ -69,11 +63,7 @@ const userModel = (function (){
     
             xhr.send(queryData.data);
         
-        }
     }
-
-    return new User();
 }
-)();
 
-export {userModel};
+export {User};

@@ -1,19 +1,19 @@
 import router from "../router.js";
-import { userModel } from "../../apiModel/userModel.js";
+import { User } from "../../apiModel/userModel.js";
 
 export default (function() {
-    var root = undefined;
+    let root = undefined;
 
     function loginButtonClicked() {
         router.render("loginPage");
     }
 
-    function registerButtonClicked() {
+    function registerButtonClicked(){
         if (document.getElementById('new_login').value == '' || document.getElementById('new_password').value == '' || document.getElementById('new_email').value == '') {
             if (document.getElementById('errRegister') != null) {
                 document.getElementById('registerDiv').removeChild(document.getElementById('errRegister'));
             }
-            var errP = document.createElement('p');
+            let errP = document.createElement('p');
             errP.id = 'errRegister';
             errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
             errP.innerText = 'Failed to Register! Empty Login or Password!';
@@ -27,7 +27,7 @@ export default (function() {
             if (document.getElementById('errRegister') != null) {
                 document.getElementById('registerDiv').removeChild(document.getElementById('errRegister'));
             }
-            var errP = document.createElement('p');
+            let errP = document.createElement('p');
             errP.id = 'errRegister';
             errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: blue; font-size: 0.8em; font-weight: bold;';
             errP.innerText = 'Register is complete! Please, go back to login.';
@@ -37,7 +37,7 @@ export default (function() {
             if (document.getElementById('errRegister') != null) {
                 document.getElementById('registerDiv').removeChild(document.getElementById('errRegister'));
             }
-            var errP = document.createElement('p');
+            let errP = document.createElement('p');
             errP.id = 'errRegister';
             errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
             errP.innerText = 'User already exist! Try another login or email.';
@@ -47,7 +47,7 @@ export default (function() {
             if (document.getElementById('errRegister') != null) {
                 document.getElementById('registerDiv').removeChild(document.getElementById('errRegister'));
             }
-            var errP = document.createElement('p');
+            let errP = document.createElement('p');
             errP.id = 'errRegister';
             errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
             errP.innerText = 'Server error! Try again.';
@@ -58,11 +58,13 @@ export default (function() {
 
     function registerQuery(login, password, email) {
 
-        var user = {
+        let user = {
             login: login,
             password: password,
             email: email
         };
+
+        let userModel = new User();
 
         userModel.setUser(user);
         userModel.setCallback(registerQuerryCallback);
@@ -72,17 +74,17 @@ export default (function() {
 
     function registerPageDisplay() {
         root.innerHTML = '';
-        var div = document.createElement('div');
+        let div = document.createElement('div');
         div.id = 'registerDiv';
         div.className = 'div-loginForm WrapCenteredInlineBlock';
         
-        var p1 = document.createElement('p');
-        var p2 = document.createElement('p');
-        var p3 = document.createElement('p');
+        let p1 = document.createElement('p');
+        let p2 = document.createElement('p');
+        let p3 = document.createElement('p');
     
-        var inp1 = document.createElement('input');
-        var inp2 = document.createElement('input');
-        var inp3 = document.createElement('input');
+        let inp1 = document.createElement('input');
+        let inp2 = document.createElement('input');
+        let inp3 = document.createElement('input');
     
         inp1.name = 'new_login';
         inp1.id = 'new_login';
@@ -105,12 +107,12 @@ export default (function() {
         div.appendChild(p2);
         div.appendChild(p3);
     
-        var btn1 = document.createElement('button');
-        var btn2 = document.createElement('button');
+        let btn1 = document.createElement('button');
+        let btn2 = document.createElement('button');
         btn1.textContent = 'Register';
         btn2.textContent = 'Back';
     
-        var divBtn = document.createElement('div');
+        let divBtn = document.createElement('div');
         divBtn.id = 'RegisterButtons'
         divBtn.className = 'div-twoButtonsContainer';
     
