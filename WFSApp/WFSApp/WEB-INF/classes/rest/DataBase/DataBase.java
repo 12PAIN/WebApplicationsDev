@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public class DataBase implements IDataBase{
 
     private String url = "jdbc:mysql://localhost:3306/WFSapp?serverTimezone=Europe/Moscow&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true";
-    private String login = "root";
-    private String password = "starwars123G";
+    private String login = "dataBaseInstanceUser";
+    private String password = "dbPassword1";
     private String Driver = "com.mysql.cj.jdbc.Driver";
     private int initConnectionCount = 10; 
 
@@ -44,7 +44,7 @@ public class DataBase implements IDataBase{
             
 
             if(conn != null){
-                PreparedStatement statement = conn.prepareStatement("SELECT * FROM users where login = (?)");
+                PreparedStatement statement = conn.prepareStatement("SELECT * FROM user where login = (?)");
                 statement.setString(1, login);
                 ResultSet resultSet = statement.executeQuery();
 
@@ -89,7 +89,7 @@ public class DataBase implements IDataBase{
 
             if(conn != null){
 
-                String sqlInsert = "INSERT INTO users(login, password, email) Values (?, ?, ?)";
+                String sqlInsert = "INSERT INTO user(login, password, email) Values (?, ?, ?)";
 
                 PreparedStatement preparedStatement = conn.prepareStatement(sqlInsert);
 
