@@ -39,10 +39,7 @@ class User{
     
             xhr.send(queryData.data);
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> 1e5aa4a38409bd1927fd33dfdb3c0ff4cdf4674a
     _registerQuery(){
             let queryData = {
                 method: "POST",
