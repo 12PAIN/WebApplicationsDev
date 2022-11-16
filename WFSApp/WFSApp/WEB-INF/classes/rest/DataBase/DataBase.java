@@ -122,4 +122,35 @@ public class DataBase implements IDataBase{
         }
     }
 
+    @Override
+    public ArrayList<String> getWardList(){
+
+        Connection conn = getConnection();
+        try{
+            ArrayList<String> list = null;
+            if(conn != null){
+
+                PreparedStatement statement = conn.prepareStatement("SELECT * FROM ward");
+                ResultSet resultSet = statement.executeQuery();
+
+                if(resultSet.isBeforeFirst()){
+                    while(resultSet.next()){
+                        String id = "" + resultSet.getInt("id");
+                        String short_name = resultSet.getString("name") + resultSet.getString("surename");
+                        
+                    }
+                    
+                }
+
+
+            }
+            connectionPool.putback(conn);
+            return list;
+        }catch(SQLException e){
+            e.printStackTrace();
+            connectionPool.putback(conn);
+            return null;
+        }
+
+    }
 }
