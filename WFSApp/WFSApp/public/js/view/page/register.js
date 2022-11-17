@@ -1,14 +1,18 @@
-import router from "../router.js";
+import{ Router }from "../router.js";
 import { User } from "../../apiModel/userModel.js";
 
-export default (function() {
-    let root = undefined;
+class pageRegister{
 
-    function loginButtonClicked() {
-        router.render("loginPage");
+    constructor(newRouter){
+        this.router = newRouter;
+        this.root = undefined;
     }
 
-    function registerButtonClicked(){
+    loginButtonClicked() {
+        this.router.renderPage("loginPage");
+    }
+
+    registerButtonClicked(){
         if (document.getElementById('new_login').value == '' || document.getElementById('new_password').value == '' || document.getElementById('new_email').value == '') {
             if (document.getElementById('errRegister') != null) {
                 document.getElementById('registerDiv').removeChild(document.getElementById('errRegister'));
@@ -19,10 +23,10 @@ export default (function() {
             errP.innerText = 'Failed to Register! Empty Login or Password!';
             document.getElementById('registerDiv').appendChild(errP);
             return;
-        } else registerQuery(document.getElementById('new_login').value, document.getElementById('new_password').value, document.getElementById('new_email').value); 
+        } else this.registerQuery(document.getElementById('new_login').value, document.getElementById('new_password').value, document.getElementById('new_email').value); 
     }
 
-    function registerQuerryCallback(response, status) {
+    registerQuerryCallback(response, status) {
         if (status == 200) {
             if (document.getElementById('errRegister') != null) {
                 document.getElementById('registerDiv').removeChild(document.getElementById('errRegister'));
@@ -56,7 +60,7 @@ export default (function() {
         }
     }
 
-    function registerQuery(login, password, email) {
+    registerQuery(login, password, email) {
 
         let user = {
             login: login,
@@ -67,12 +71,12 @@ export default (function() {
         let userModel = new User();
 
         userModel.setUser(user);
-        userModel.setCallback(registerQuerryCallback);
+        userModel.setCallback(this.registerQuerryCallback);
 
         userModel._registerQuery();
     }
 
-    function registerPageDisplay() {
+    registerPageDisplay() {
         root.innerHTML = '';
         let div = document.createElement('div');
         div.id = 'registerDiv';
@@ -122,38 +126,37 @@ export default (function() {
         div.appendChild(divBtn);
         root.appendChild(div);
     
-        btn1.addEventListener("click", registerButtonClicked);
-        btn2.addEventListener("click", loginButtonClicked);
+        btn1.addEventListener("click", this.registerButtonClicked.bind(this));
+        btn2.addEventListener("click", this.loginButtonClicked.bind(this));
     
-        inp1.addEventListener("keypress", function(event) {
+        inp1.addEventListener("keypress", (event) => {
             if (event.key === "Enter") {
-                registerButtonClicked();
+                this.registerButtonClicked.bind(this);
             }
         });
     
-        inp2.addEventListener("keypress", function(event) {
+        inp2.addEventListener("keypress", (event) => {
             if (event.key === "Enter") {
-                registerButtonClicked();
+                this.registerButtonClicked.bind(this);
             }
         });
     
-        inp3.addEventListener("keypress", function(event) {
+        inp3.addEventListener("keypress", (event) => {
             if (event.key === "Enter") {
-                registerButtonClicked();
+                this.registerButtonClicked.bind(this);
             }
         });
     }
 
-    function renderPage() {
-        registerPageDisplay();
+    renderPage() {
+        this.registerPageDisplay();
     }
 
-    function init(rootParam) {
-        root = rootParam; 
-        renderPage();
+    _init(rootParam){
+        this.root = rootParam; 
+        this.renderPage();
     }
 
-    return {
-        render: init  
-    };
-})();
+}
+
+export {pageRegister};

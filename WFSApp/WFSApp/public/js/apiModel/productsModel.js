@@ -64,7 +64,7 @@ const productModel = (function() {
             xhr.onreadystatechange = function() {
                 if (this.readyState != 4) return;
                 let response;
-                console.log( "Request status: " + xhr.status + ' | status text: ' + xhr.statusText + ' | response text: ' + xhr.responseText);
+                //console.log( "Request status: " + xhr.status + ' | status text: ' + xhr.statusText + ' | response text: ' + xhr.responseText);
                 if(xhr.status == 200) response = JSON.parse(xhr.responseText);
                 else response = xhr.responseText;
                 callback(response, xhr.status);

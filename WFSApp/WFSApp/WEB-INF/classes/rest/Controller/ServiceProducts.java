@@ -87,7 +87,7 @@ public class ServiceProducts {
         
             if(TokenTools.verifyToken(token)){
         
-                int row = model.addRow(product);
+                Integer row = model.addRow(product);
                 if(row == 1) resultJSON = jsonb.toJson("row_added");
                 else{
                     return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();

@@ -1,18 +1,22 @@
 import { User } from "../../apiModel/userModel.js";
-import router from "../router.js";
+import { Router } from "../router.js";
 
-export default (function() {
-    let root = undefined;
+class pageLogin{
 
-    function mainPageDisplay() {
-        router.render("mainPage");
+    constructor(newRouter){
+        this.root = undefined;
+        this.router = newRouter;
     }
 
-    function registerButtonClicked() {
-        router.render("registerPage");
+    mainPageDisplay() {
+        this.router.renderPage("mainPage");
     }
 
-    function loginButtonClicked() {
+    registerButtonClicked() {
+        this.router.renderPage("registerPage");
+    }
+
+    loginButtonClicked() {
         if (document.getElementById('login').value == '' || document.getElementById('password').value == '') {
             if (document.getElementById('errLogin') != null) {
                 document.getElementById('loginDiv').removeChild(document.getElementById('errLogin'));
@@ -24,10 +28,22 @@ export default (function() {
             document.getElementById('loginDiv').appendChild(errP);
             return;
         }
-        else authQuerry(document.getElementById('login').value, document.getElementById('password').value);
+        else this.authQuerry(document.getElementById('login').value, document.getElementById('password').value);
     }
 
-    function authQuerryCallback(response, status) {
+    async authQuerry(login, password) {
+        let user = {
+            login: login,
+            password: password,
+            email: undefined
+        }
+
+        let userModel = new User();
+        userModel.setUser(user);
+        let response = await userModel._authQuery();
+
+        let status = response.status;
+
         if (status == 200) {
             localStorage.setItem('WFSAppUserToken', JSON.stringify(response));
             if (document.getElementById('errLogin') != null) {
@@ -38,7 +54,7 @@ export default (function() {
             errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: blue; font-size: 0.8em; font-weight: bold;';
             errP.innerText = 'Logined! Please, wait for pesponse...';
             document.getElementById('loginDiv').appendChild(errP);
-            renderPage();
+            this.renderPage();
             return;
         }
         else if (status == 401) {
@@ -61,22 +77,10 @@ export default (function() {
             errP.innerText = 'Server error! Try again or try again later.';
             document.getElementById('loginDiv').appendChild(errP);
         }
+
     }
 
-    function authQuerry(login, password) {
-        let user = {
-            login: login,
-            password: password,
-            email: undefined
-        }
-
-        let userModel = new User();
-        userModel.setUser(user);
-        userModel.setCallback(authQuerryCallback);
-        userModel._authQuery();
-    }
-
-    function loginPageDisplay() {
+    loginPageDisplay() {
         
         root.innerHTML = '';
 
@@ -127,36 +131,35 @@ export default (function() {
         div.appendChild(divBtn);
         root.appendChild(div);
     
-        btn1.addEventListener("click", loginButtonClicked);
+        btn1.addEventListener("click", this.loginButtonClicked.bind(this));
         inp1.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
-                loginButtonClicked();
+                this.loginButtonClicked();
             }
         });
     
         inp2.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
-                loginButtonClicked();
+                this.loginButtonClicked();
             }
         });
-        btn2.addEventListener("click", registerButtonClicked);
+        btn2.addEventListener("click", this.registerButtonClicked.bind(this));
     }
 
-    function renderPage() {
+    renderPage() {
         if(localStorage.getItem('WFSAppUserToken') == null) {
-            loginPageDisplay();
+            this.loginPageDisplay();
         }
         else {
-            mainPageDisplay();
+            this.mainPageDisplay();
         }
     }
 
-    function _init(rootParam) {
-        root = rootParam; 
-        renderPage();
+    _init(rootParam) {
+        this.root = rootParam; 
+        this.renderPage();
     }
 
-    return {
-        render: _init  
-    };
-})();
+};
+
+export {pageLogin};

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class DataBase implements IDataBase{
 
-    private String url = "jdbc:mysql://localhost:3306/lab_1?serverTimezone=Europe/Moscow&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true";
-    private String login = "root";
-    private String password = "starwars123G";
+    private String url = "jdbc:mysql://localhost:3306/testtask?serverTimezone=Europe/Moscow&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true";
+    private String login = "dataBaseInstanceUser";
+    private String password = "dbPassword1";
     private String Driver = "com.mysql.cj.jdbc.Driver";
     private int initConnectionCount = 10; 
 
@@ -131,7 +131,7 @@ public class DataBase implements IDataBase{
                 
             
                 if(conn != null){
-                    String sqlInsert = "INSERT INTO products(ProductName, Price, Description) Values (?, ?, ?)";
+                    String sqlInsert = "INSERT INTO products(name, price, description) Values (?, ?, ?)";
 
                     PreparedStatement preparedStatement = conn.prepareStatement(sqlInsert);
 
@@ -231,9 +231,9 @@ public class DataBase implements IDataBase{
                     ArrayList<String> row = new ArrayList<>();
                 
                     row.add(String.valueOf(resultSet.getInt("id")));
-                    row.add(resultSet.getString("ProductName"));
-                    row.add(String.valueOf(resultSet.getInt("Price")));
-                    row.add(resultSet.getString("Description"));
+                    row.add(resultSet.getString("name"));
+                    row.add(String.valueOf(resultSet.getInt("price")));
+                    row.add(resultSet.getString("description"));
                 
                     strResultSet.add(row);
                 }
