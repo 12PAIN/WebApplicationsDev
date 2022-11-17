@@ -43,6 +43,7 @@ class pageLogin{
         let response = await userModel._authQuery();
 
         let status = response.status;
+        response = response.text;
 
         if (status == 200) {
             localStorage.setItem('WFSAppUserToken', JSON.stringify(response));
