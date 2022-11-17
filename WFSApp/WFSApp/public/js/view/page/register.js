@@ -23,10 +23,26 @@ class pageRegister{
             errP.innerText = 'Failed to Register! Empty Login or Password!';
             document.getElementById('registerDiv').appendChild(errP);
             return;
-        } else this.registerQuery(document.getElementById('new_login').value, document.getElementById('new_password').value, document.getElementById('new_email').value); 
+        } else this.registerQuerry(document.getElementById('new_login').value, document.getElementById('new_password').value, document.getElementById('new_email').value); 
     }
 
-    registerQuerryCallback(response, status) {
+    async registerQuerry(login,password,email) {
+
+        let user = {
+            login: login,
+            password: password,
+            email: email
+        };
+
+        let userModel = new User();
+
+        userModel.setUser(user);
+        userModel.setCallback(this.registerQuerryCallback);
+
+        let response = await userModel._registerQuery();
+        let status = response.status;
+        response = response.text;
+
         if (status == 200) {
             if (document.getElementById('errRegister') != null) {
                 document.getElementById('registerDiv').removeChild(document.getElementById('errRegister'));
@@ -60,22 +76,6 @@ class pageRegister{
         }
     }
 
-    registerQuery(login, password, email) {
-
-        let user = {
-            login: login,
-            password: password,
-            email: email
-        };
-
-        let userModel = new User();
-
-        userModel.setUser(user);
-        userModel.setCallback(this.registerQuerryCallback);
-
-        userModel._registerQuery();
-    }
-
     registerPageDisplay() {
         root.innerHTML = '';
         let div = document.createElement('div');
@@ -94,7 +94,7 @@ class pageRegister{
         inp1.id = 'new_login';
         inp2.name = 'new_password';
         inp2.id = 'new_password';
-        inp2.type = 'new_password';
+        inp2.type = 'password';
         inp3.name = 'new_email';
         inp3.id = 'new_email';
     

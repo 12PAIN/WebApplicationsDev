@@ -29,32 +29,22 @@ class User{
     }
 
     _registerQuery(){
-            let queryData = {
-                method: "POST",
-                uri: "./api/users/",
-                flagAsync: true,
-                data: JSON.stringify(this.user)
-            }
+        return new Promise( (resolve) => {
+            let status;
+            fetch('api/users/',{method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8'},body: JSON.stringify(this.user)})
+            .then( (response) => { 
+                status = response.status;
+                return response.json()
+            })
+            .then( (data) => {
+                let result = {
+                    status: status,
+                    text: data
+                }
+                resolve(result);            
+            });
+        });
     
-            let xhr = new XMLHttpRequest();
-    
-            let callback = this.callbackLink;
-
-            xhr.open(queryData.method,queryData.uri,queryData.flagAsync);
-    
-            xhr.setRequestHeader('Content-type', 'application/json;charset=utf-8');
-    
-            xhr.onreadystatechange = function() {
-                if (this.readyState != 4) return;
-                //console.log( "Request status: " + xhr.status + ' | status text: ' + xhr.statusText + ' | response text: ' + xhr.responseText);
-                let response;
-                if(xhr.status == 200) response = JSON.parse(xhr.responseText);
-                else response = xhr.responseText;
-                callback(response, xhr.status);
-            }
-    
-            xhr.send(queryData.data);
-        
     }
 }
 

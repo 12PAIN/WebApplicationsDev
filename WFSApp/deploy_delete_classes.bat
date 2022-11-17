@@ -12,4 +12,5 @@ del /q %path_glassfish%\domains\domain1\autodeploy\%name%.war_deployFailed
 move .\%name%\%name%.war %path_glassfish%\domains\domain1\autodeploy
 del /q .\%name%\%name%.war
 del /q .\%name%\%name%.zip
+del /q /s .\%name%\WEB-INF\classes\rest\*.class 
 pause
