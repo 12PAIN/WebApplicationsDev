@@ -64,7 +64,7 @@ public class ServiceProducts {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
         }    
         return Response.ok(resultJSON).build(); 
-  }
+    }
 
     @POST
     @Path("/")

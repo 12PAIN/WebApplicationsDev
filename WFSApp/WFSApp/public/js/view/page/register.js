@@ -13,14 +13,15 @@ class pageRegister{
     }
 
     registerButtonClicked(){
-        if (document.getElementById('new_login').value == '' || document.getElementById('new_password').value == '' || document.getElementById('new_email').value == '') {
+        let regexp = /^[\w\d%$:.-]+@\w+\.\w{2,7}$/;
+        if (document.getElementById('new_login').value == '' || document.getElementById('new_password').value == '' || document.getElementById('new_email').value == '' || regexp.test(document.getElementById('new_email').value) == false) {
             if (document.getElementById('errRegister') != null) {
                 document.getElementById('registerDiv').removeChild(document.getElementById('errRegister'));
             }
             let errP = document.createElement('p');
             errP.id = 'errRegister';
             errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
-            errP.innerText = 'Failed to Register! Empty Login or Password!';
+            errP.innerText = 'Failed to Register! Invalid Data';
             document.getElementById('registerDiv').appendChild(errP);
             return;
         } else this.registerQuerry(document.getElementById('new_login').value, document.getElementById('new_password').value, document.getElementById('new_email').value); 
