@@ -1,4 +1,3 @@
-import{ Router }from "../router.js";
 import { User } from "../../apiModel/userModel.js";
 
 class pageRegister{
@@ -6,6 +5,7 @@ class pageRegister{
     constructor(newRouter){
         this.router = newRouter;
         this.root = undefined;
+        this.userModel = new User();
     }
 
     loginButtonClicked() {
@@ -35,12 +35,8 @@ class pageRegister{
             email: email
         };
 
-        let userModel = new User();
-
-        userModel.setUser(user);
-        userModel.setCallback(this.registerQuerryCallback);
-
-        let response = await userModel._registerQuery();
+        this.userModel.setUser(user);
+        let response = await this.userModel._registerQuery();
         let status = response.status;
         response = response.text;
 

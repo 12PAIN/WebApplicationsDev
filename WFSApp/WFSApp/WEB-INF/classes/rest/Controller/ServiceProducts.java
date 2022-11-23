@@ -19,8 +19,8 @@ import jakarta.json.bind.JsonbException;
 
 import java.util.ArrayList;
 
-import rest.Model.Product;
 import rest.Model.IModel;
+import rest.Model.DTO.Product;
 import jakarta.inject.Inject;
 
 @Path("/products")
@@ -42,19 +42,19 @@ public class ServiceProducts {
             
             try{
                 token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
-                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
             }catch(JsonbException e){
-                return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
             }
             
 
             if(TokenTools.verifyToken(token)){
                 resultJSON = jsonb.toJson(model.getProductsList());
 
-                if(resultJSON == null) return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();
+                if(resultJSON == null) return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
 
             }else{
-                return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
             }
 
         }catch (JsonbException e) {
@@ -79,9 +79,9 @@ public class ServiceProducts {
 
             try{
                 token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
-                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
             }catch(JsonbException e){
-                return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
             }
             product = jsonb.fromJson(newProduct, new Product(){}.getClass().getGenericSuperclass());
         
@@ -90,11 +90,11 @@ public class ServiceProducts {
                 Integer row = model.addRow(product);
                 if(row == 1) resultJSON = jsonb.toJson("row_added");
                 else{
-                    return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();
+                    return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
                 }
             
             }else{
-                return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
             }
 
         }catch (JsonbException e) {
@@ -118,25 +118,25 @@ public class ServiceProducts {
 
             try{
                 token = jsonb.fromJson(userToken, new Token(){}.getClass().getGenericSuperclass());
-                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+                if(token == null) return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
             }catch(JsonbException e){
-                return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
             }
             toDelete = jsonb.fromJson(toDeleteJSON, new ArrayList<Integer>(){}.getClass().getGenericSuperclass());
             
-            if(toDelete == null) return Response.status(Response.Status.NOT_ACCEPTABLE).entity("NoData").build();
+            if(toDelete == null) return Response.status(Response.Status.NOT_ACCEPTABLE).entity(jsonb.toJson("NoData")).build();
 
         if(TokenTools.verifyToken(token)){
 
             Integer rows = model.deleteRows(toDelete);
 
-            if(rows == null) return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();
-            if(rows == 0) return Response.status(Response.Status.NO_CONTENT).entity("Nothing Deleted").build();
+            if(rows == null) return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
+            if(rows == 0) return Response.status(Response.Status.NO_CONTENT).entity(jsonb.toJson("Nothing Deleted")).build();
 
             resultJSON = jsonb.toJson(rows);
 
         }else{
-            return Response.status(Response.Status.UNAUTHORIZED).entity("ExpiredToken").build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("ExpiredToken")).build();
         }
 
         }catch (JsonbException e) {

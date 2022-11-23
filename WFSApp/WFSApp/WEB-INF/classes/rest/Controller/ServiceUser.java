@@ -12,9 +12,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
-
-import rest.Model.User;
 import rest.Model.IModel;
+import rest.Model.DTO.User;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class ServiceUser {
 
             
             if(userData == null){
-                return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();
+                return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
             }
 
             if(userData.get(0) == "true"){
@@ -51,7 +50,7 @@ public class ServiceUser {
                 resultJSON = jsonb.toJson(token);
 
             }else{
-                return Response.status(Response.Status.UNAUTHORIZED).entity("UserNotFound").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserNotFound")).build();
             }
 
         }catch (JsonbException e) {
@@ -79,11 +78,11 @@ public class ServiceUser {
             Boolean userCreated = model.addUser(newUser);
 
             if(userCreated == null){
-                return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Unavailable DataBase Connection").build();
+                return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
             }
 
             if(userCreated == false){
-                return Response.status(Response.Status.UNAUTHORIZED).entity("UserAlreadyExist").build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserAlreadyExist")).build();
             }
             
             resultJSON = jsonb.toJson("userCreated");

@@ -1,13 +1,10 @@
 class User{
     constructor(){
         this.user = undefined;
-        this.callbackLink = undefined;
     }
+
     setUser(usr){
         this.user = usr;
-    }
-    setCallback(newCallback){
-        this.callbackLink = newCallback;
     }
 
     _authQuery(){

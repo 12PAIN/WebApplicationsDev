@@ -4,8 +4,17 @@ import java.util.ArrayList;
 
 import rest.DataBase.FDataBase;
 import rest.DataBase.IDataBase;
+import rest.Model.DTO.Product;
+import rest.Model.DTO.User;
+import rest.Model.DataSource.User.IUserData;
+
+//TEMPORARY
+import jakarta.inject.Inject;
 
 public class Model implements IModel{
+
+    @Inject
+    IUserData datasource;
 
     @Override
     public ArrayList<Product> GenerateProductList(ArrayList<ArrayList<String>> products){
@@ -41,11 +50,7 @@ public class Model implements IModel{
 
     @Override
     public ArrayList<String> checkUser(User user){
-
-        FDataBase dbFactory = new FDataBase();
-        IDataBase dataBase = dbFactory.initDataBase();
-        return dataBase.isUserCorrect(user.getLogin(), user.getPassword());
-
+        return datasource.checkUser(user.getLogin(), user.getPassword());
     }
 
     @Override

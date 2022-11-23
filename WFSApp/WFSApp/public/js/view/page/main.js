@@ -1,18 +1,34 @@
-import {Router} from "../router.js";
-import { productModel as model } from "../../apiModel/productsModel.js";
+import { Products } from "../../apiModel/productsModel.js";
 
 class pageMain{
 
     constructor(newRouter){
         this.root = undefined;
         this.router = newRouter;
+        this.model = new Products();
     }
 
     loginPageDisplay() {
         this.router.renderPage("loginPage");
     }
 
-    deleteButtonClickedCallback(response, status) {
+    async deleteButtonClicked() {
+
+        if(document.getElementsByClassName('checkboxToDelete') == null) return;
+
+        let checkboxes = document.getElementsByClassName('checkboxToDelete');
+        let checkboxChecked = [];
+
+        for (let index = 0; index < checkboxes.length; index++) {
+            if (checkboxes[index].checked) {
+                checkboxChecked.push(checkboxes[index].value);
+            }
+        }
+
+        let response = await this.model._deleteProduct(JSON.stringify(checkboxChecked));
+        let status = response.status;
+        response = response.text;
+
         if(status == 200){
             this.getProductList();
             return;
@@ -27,25 +43,29 @@ class pageMain{
         }
     }
 
-    deleteButtonClicked() {
+    async addButtonClicked() {
 
-
-        if(document.getElementsByClassName('checkboxToDelete') == null) return;
-
-        let checkboxes = document.getElementsByClassName('checkboxToDelete');
-        let checkboxChecked = [];
-
-        for (let index = 0; index < checkboxes.length; index++) {
-            if (checkboxes[index].checked) {
-                checkboxChecked.push(checkboxes[index].value);
-            }
+        let product = {
+            name: document.getElementById('ProductName').value,
+            id: undefined,
+            price: document.getElementById('Price').value,
+            description: document.getElementById('Description').value,
         }
 
-        model.setCallback(this.deleteButtonClickedCallback.bind(this));
-        model._deleteProduct(JSON.stringify(checkboxChecked));
-    }
+        if(product.name == undefined || product.name == null || product.name == ''){
+            this.addButtonClickedCallback(400);
+            return;
+        }
+        if(product.price == undefined || product.price == null || product.price == ''){
+            this.addButtonClickedCallback(400);
+            return;
+        }
+        
+        this.model.setProduct(product);
+        let response = await this.model._addProduct();
+        let status = response.status;
+        response = response.text;
 
-    addButtonClickedCallback(status) {
         if(status == 200) {
             this.getProductList();
             return;
@@ -67,29 +87,13 @@ class pageMain{
         return;
     }
     
-    addButtonClicked() {
-        let product = {
-            name: document.getElementById('ProductName').value,
-            id: undefined,
-            price: document.getElementById('Price').value,
-            description: document.getElementById('Description').value,
-        }
+    async getProductList() {
 
-        if(product.name == undefined || product.name == null || product.name == ''){
-            this.addButtonClickedCallback(400);
-            return;
-        }
-        if(product.price == undefined || product.price == null || product.price == ''){
-            this.addButtonClickedCallback(400);
-            return;
-        }
-        
-        model.setProduct(product);
-        model.setCallback(this.addButtonClickedCallback.bind(this));
-        model._addProduct();
-    }
+        let response = await this.model._getProductsList();
 
-    getProductsListCallback(response, status) {
+        let status = response.status;
+        response = response.text;
+
         if(status == 401) {
             localStorage.removeItem('WFSAppUserToken');
             if(document.getElementById("productList") != null) root.removeChild(document.getElementById("productList"));
@@ -195,11 +199,6 @@ class pageMain{
                 root.removeChild(document.getElementById("productList"));
             }
         }
-    }
-
-    getProductList() {
-        model.setCallback(this.getProductsListCallback.bind(this));
-        model._getProductsList();
     }
 
     mainPageDisplay() {

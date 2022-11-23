@@ -2,6 +2,9 @@ package rest.Model;
 
 import java.util.ArrayList;
 
+import rest.Model.DTO.Product;
+import rest.Model.DTO.User;
+
 public interface IModel {
     ArrayList<Product> GenerateProductList(ArrayList<ArrayList<String>> products);
     ArrayList<String> checkUser(User user);

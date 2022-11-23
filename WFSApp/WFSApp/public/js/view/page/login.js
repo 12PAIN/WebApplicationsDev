@@ -1,11 +1,11 @@
 import { User } from "../../apiModel/userModel.js";
-import { Router } from "../router.js";
 
 class pageLogin{
 
     constructor(newRouter){
         this.root = undefined;
         this.router = newRouter;
+        this.userModel = new User();
     }
 
     mainPageDisplay() {
@@ -38,9 +38,8 @@ class pageLogin{
             email: undefined
         }
 
-        let userModel = new User();
-        userModel.setUser(user);
-        let response = await userModel._authQuery();
+        this.userModel.setUser(user);
+        let response = await this.userModel._authQuery();
 
         let status = response.status;
         response = response.text;
