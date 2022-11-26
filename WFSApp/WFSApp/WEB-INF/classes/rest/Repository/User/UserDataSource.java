@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.annotation.Resource;
 import jakarta.persistence.*;
+
 import jakarta.transaction.*;
 
 import rest.Model.DTO.User;
@@ -44,7 +45,6 @@ public class UserDataSource implements IUserData {
             return resolveUser;
         }
         catch (Exception ex){
-            System.out.println(ex);
             return null;
         }
         
@@ -56,15 +56,27 @@ public class UserDataSource implements IUserData {
         EntityManager entityManager;
 
         try{
+
             entityManager = entityManagerFactory.createEntityManager();
         
             userTransaction.begin();
             entityManager.joinTransaction();
 
-            EUser newUser = new EUser(user);
-            entityManager.persist(newUser);
+            Boolean status = null;
 
-            return true;
+            EUser newUser = new EUser(user);
+            if(newUser.getLogin() != null){
+
+                entityManager.persist(newUser);
+                status = true;
+            }
+            else {
+                status = false;
+            }
+
+            userTransaction.commit();
+
+            return status;
 
             /*
             @Transactional
@@ -76,9 +88,10 @@ public class UserDataSource implements IUserData {
                     .executeUpdate();
             }  
             */
-
-        }catch (Exception ex){
-            System.out.println(ex);
+        
+        }
+        catch (Exception ex){
+            System.out.println(ex.getCause());
             return null;
         }
 
