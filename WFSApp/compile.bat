@@ -12,8 +12,12 @@ javac WFSApp\WEB-INF\classes\rest\Builder\Products\*.java -classpath "D:\Study\F
 
 javac WFSApp\WEB-INF\classes\rest\Controller\Config\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Controller\Token\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
+
+javac WFSApp\WEB-INF\classes\rest\Controller\Interceptor\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
+
 javac WFSApp\WEB-INF\classes\rest\Controller\Service\Root\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Controller\Service\User\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Controller\Service\Products\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
+
 
 pause
