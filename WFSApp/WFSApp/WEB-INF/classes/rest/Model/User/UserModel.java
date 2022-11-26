@@ -18,6 +18,7 @@ public class UserModel implements IUserModel{
 
         if(userData == null) return null;
 
+        if(userData.getLogin() == null) return userData;
         if(!userData.getLogin().equals(user.getLogin()) || !userData.getPassword().equals(user.getPassword())) userData.setLogin(null);
 
         return userData;

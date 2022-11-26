@@ -19,6 +19,7 @@ import jakarta.json.bind.JsonbException;
 
 import java.util.ArrayList;
 
+import rest.Builder.Built;
 import rest.Controller.Token.Token;
 import rest.Controller.Token.TokenTools;
 import rest.Model.DTO.Product;
@@ -28,7 +29,7 @@ import jakarta.inject.Inject;
 @Path("/products")
 public class ServiceProducts {
 
-    @Inject
+    @Inject @Built
     IProductsModel model;
 
     @GET
@@ -142,10 +143,10 @@ public class ServiceProducts {
         }
 
         }catch (JsonbException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+            return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
         }
         catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+            return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
         }    
         return Response.ok(resultJSON).build(); 
     }

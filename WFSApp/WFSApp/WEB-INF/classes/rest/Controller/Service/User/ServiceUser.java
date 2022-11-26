@@ -59,11 +59,11 @@ public class ServiceUser {
 
         }catch (JsonbException e) {
             System.out.println(e);
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+            return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
         }
         catch (Exception e) {
             System.out.println(e);
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+            return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
         }    
         return Response.ok(resultJSON).build();
     }
@@ -95,10 +95,10 @@ public class ServiceUser {
 
         }
         catch (JsonbException e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+        return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
         }
         catch (Exception e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
+        return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
         }    
         return Response.ok(jsonb.toJson(resultJSON)).build();  
     }

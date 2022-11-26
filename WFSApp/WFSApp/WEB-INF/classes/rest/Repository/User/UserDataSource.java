@@ -28,8 +28,7 @@ public class UserDataSource implements IUserData {
             userTransaction.begin();
             entityManager.joinTransaction();
 
-            List<EUser> user = entityManager.createQuery("SELECT p FROM EUser p WHERE p.login = \'"+getableUser.getLogin()+"\'", EUser.class).getResultList();
-
+            List<EUser> user = entityManager.createQuery("SELECT u FROM EUser u WHERE u.login = \'"+getableUser.getLogin()+"\'", EUser.class).getResultList();
 
             User resolveUser;
 
@@ -39,10 +38,8 @@ public class UserDataSource implements IUserData {
                 resolveUser = new User();
                 resolveUser.setLogin(null);
             }
-            System.out.println(user.get(0).getPassword() + "  164754657 " + resolveUser.getPassword());
-            userTransaction.commit();
 
-            System.out.println(user.get(0).getLogin() + " ||||| " + resolveUser.getLogin() + " ||||| " + getableUser.getLogin());
+            userTransaction.commit();
 
             return resolveUser;
         }
@@ -78,17 +75,6 @@ public class UserDataSource implements IUserData {
             userTransaction.commit();
 
             return status;
-
-            /*
-            @Transactional
-            public void insertWithQuery(Person person) {
-                entityManager.createNativeQuery("INSERT INTO person (id, first_name, last_name) VALUES (?,?,?)")
-                    .setParameter(1, person.getId())
-                    .setParameter(2, person.getFirstName())
-                    .setParameter(3, person.getLastName())
-                    .executeUpdate();
-            }  
-            */
         
         }
         catch (Exception ex){
