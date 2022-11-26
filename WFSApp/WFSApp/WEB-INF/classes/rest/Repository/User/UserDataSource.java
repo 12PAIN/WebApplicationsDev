@@ -6,7 +6,6 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.*;
 
 import jakarta.transaction.*;
-
 import rest.Model.DTO.User;
 
 public class UserDataSource implements IUserData {
@@ -29,7 +28,8 @@ public class UserDataSource implements IUserData {
             userTransaction.begin();
             entityManager.joinTransaction();
 
-            List<EUser> user = entityManager.createQuery("SELECT p FROM EUser p WHERE p.login = " + getableUser.getLogin(), EUser.class).getResultList();
+            List<EUser> user = entityManager.createQuery("SELECT p FROM EUser p WHERE p.login = \'"+getableUser.getLogin()+"\'", EUser.class).getResultList();
+
 
             User resolveUser;
 
@@ -42,9 +42,12 @@ public class UserDataSource implements IUserData {
             System.out.println(user.get(0).getPassword() + "  164754657 " + resolveUser.getPassword());
             userTransaction.commit();
 
+            System.out.println(user.get(0).getLogin() + " ||||| " + resolveUser.getLogin() + " ||||| " + getableUser.getLogin());
+
             return resolveUser;
         }
         catch (Exception ex){
+            System.out.println(ex);
             return null;
         }
         
@@ -54,15 +57,13 @@ public class UserDataSource implements IUserData {
     public Boolean addUser(User user){
 
         EntityManager entityManager;
-
+        Boolean status = null;
         try{
 
             entityManager = entityManagerFactory.createEntityManager();
         
             userTransaction.begin();
             entityManager.joinTransaction();
-
-            Boolean status = null;
 
             EUser newUser = new EUser(user);
             if(newUser.getLogin() != null){
@@ -91,7 +92,8 @@ public class UserDataSource implements IUserData {
         
         }
         catch (Exception ex){
-            System.out.println(ex.getCause());
+            if(ex.getCause().getCause().getCause() instanceof java.sql.SQLIntegrityConstraintViolationException) return false;
+            System.out.println(ex);
             return null;
         }
 
