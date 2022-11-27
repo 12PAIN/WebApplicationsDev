@@ -25,6 +25,7 @@ class User{
         });
     }
 
+
     _registerQuery(){
         return new Promise( (resolve) => {
             let status;

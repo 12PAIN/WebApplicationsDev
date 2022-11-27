@@ -1,0 +1,7 @@
+Асинхронность JS:
+ https://www.youtube.com/watch?v=8aGhZQkoFbQ
+
+Промисы:
+ https://learn.javascript.ru/promise
+async/await:
+ https://learn.javascript.ru/async-await
