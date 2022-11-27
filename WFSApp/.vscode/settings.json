@@ -1,6 +1,7 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "d:\\Study\\FullStackCourse\\glassfish6\\glassfish\\lib\\javaee.jar"
+        "d:\\Study\\FullStackCourse\\glassfish6\\glassfish\\lib\\javaee.jar",
+        "d:\\Study\\FullStackCourse\\glassfish6\\glassfish\\modules\\jakarta.enterprise.cdi-api.jar"
     ]
 }

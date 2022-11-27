@@ -1,0 +1,5 @@
+Чистая архитектура
+ https://habr.com/ru/post/269589/
+
+Ports & Adapters Architecture
+ https://herbertograca.com/2017/09/14/ports-adapters-architecture/
