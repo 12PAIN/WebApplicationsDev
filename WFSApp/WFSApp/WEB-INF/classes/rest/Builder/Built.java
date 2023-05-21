@@ -1,4 +1,4 @@
-package rest.Builder;
+package rest.builder;
 
 import jakarta.inject.Qualifier;
 

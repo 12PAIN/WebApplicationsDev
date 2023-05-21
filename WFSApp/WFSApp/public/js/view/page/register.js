@@ -1,4 +1,4 @@
-import { User } from "../../apiModel/userModel.js";
+import { User } from "../../Model/userModel.js";
 
 class pageRegister{
 
@@ -20,7 +20,7 @@ class pageRegister{
             }
             let errP = document.createElement('p');
             errP.id = 'errRegister';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
+            errP.class = 'div-LoginError';
             errP.innerText = 'Failed to Register! Invalid Data';
             document.getElementById('registerDiv').appendChild(errP);
             return;
@@ -46,7 +46,7 @@ class pageRegister{
             }
             let errP = document.createElement('p');
             errP.id = 'errRegister';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: blue; font-size: 0.8em; font-weight: bold;';
+            errP.class = 'div-LoginWarning';
             errP.innerText = 'Register is complete! Please, go back to login.';
             document.getElementById('registerDiv').appendChild(errP);
             return;
@@ -56,7 +56,7 @@ class pageRegister{
             }
             let errP = document.createElement('p');
             errP.id = 'errRegister';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
+            errP.class = 'div-LoginError';
             errP.innerText = 'User already exist! Try another login or email.';
             document.getElementById('registerDiv').appendChild(errP);
             return;
@@ -66,7 +66,7 @@ class pageRegister{
             }
             let errP = document.createElement('p');
             errP.id = 'errRegister';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
+            errP.class = 'div-LoginError';
             errP.innerText = 'Server error! Try again.';
             document.getElementById('registerDiv').appendChild(errP);
             return;

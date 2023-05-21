@@ -1,4 +1,4 @@
-package rest.Repository.User;
+package rest.repository.user;
 
 import java.util.List;
 
@@ -6,7 +6,9 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.*;
 
 import jakarta.transaction.*;
-import rest.Model.DTO.User;
+import rest.model.dto.User;
+import rest.model.user.in.IUserData;
+import rest.repository.entities.user.EUser;
 
 public class UserDataSource implements IUserData {
     

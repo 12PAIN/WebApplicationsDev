@@ -1,9 +1,8 @@
-package rest.Builder.Products;
+package rest.builder.products;
 
-import rest.Builder.Built;
-import rest.Model.Products.IProductsModel;
-import rest.Repository.Products.IProductsData;
-
+import rest.builder.Built;
+import rest.model.products.in.IProductsData;
+import rest.model.products.out.IProductsModel;
 import jakarta.inject.Inject;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.Default;

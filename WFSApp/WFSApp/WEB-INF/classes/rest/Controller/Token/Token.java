@@ -1,4 +1,4 @@
-package rest.Controller.Token;
+package rest.controller.token;
 
 public class Token{
 

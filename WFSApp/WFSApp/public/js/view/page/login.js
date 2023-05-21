@@ -1,4 +1,4 @@
-import { User } from "../../apiModel/userModel.js";
+import { User } from "../../Model/userModel.js";
 
 class pageLogin{
 
@@ -23,12 +23,22 @@ class pageLogin{
             }
             let errP = document.createElement('p');
             errP.id = 'errLogin';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
+            errP.class = 'div-LoginError';
             errP.innerText = 'Failed to Login! Empty Login or Password!';
             document.getElementById('loginDiv').appendChild(errP);
             return;
         }
-        else this.authQuerry(document.getElementById('login').value, document.getElementById('password').value);
+        else{ 
+            if (document.getElementById('errLogin') != null) {
+                document.getElementById('loginDiv').removeChild(document.getElementById('errLogin'));
+            }
+            let errP = document.createElement('p');
+            errP.id = 'errLogin';
+            errP.class = 'div-LoginWarning';
+            errP.innerText = 'Please wait!';
+            document.getElementById('loginDiv').appendChild(errP);
+            this.authQuerry(document.getElementById('login').value, document.getElementById('password').value);
+        }
     }
 
     async authQuerry(login, password) {
@@ -51,7 +61,7 @@ class pageLogin{
             }
             let errP = document.createElement('p');
             errP.id = 'errLogin';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: blue; font-size: 0.8em; font-weight: bold;';
+            errP.class = 'div-LoginWarning';
             errP.innerText = 'Logined! Please, wait for pesponse...';
             document.getElementById('loginDiv').appendChild(errP);
             this.renderPage();
@@ -63,7 +73,7 @@ class pageLogin{
             }
             let errP = document.createElement('p');
             errP.id = 'errLogin';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
+            errP.class = 'div-LoginError';
             errP.innerText = 'Failed to Login! Invalid Login or Password.';
             document.getElementById('loginDiv').appendChild(errP);
         }
@@ -73,7 +83,7 @@ class pageLogin{
             }
             let errP = document.createElement('p');
             errP.id = 'errLogin';
-            errP.style = 'display: flex; width: 150px; justify-content: space-around; flex:auto; color: red; font-size: 0.8em; font-weight: bold;';
+            errP.class = 'div-LoginError';
             errP.innerText = 'Server error! Try again or try again later.';
             document.getElementById('loginDiv').appendChild(errP);
         }

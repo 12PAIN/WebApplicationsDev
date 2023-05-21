@@ -1,4 +1,4 @@
-package rest.Repository.Products;
+package rest.repository.products;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,9 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.*;
 
 import jakarta.transaction.*;
-import rest.Model.DTO.Product;
+import rest.model.dto.Product;
+import rest.model.products.in.IProductsData;
+import rest.repository.entities.products.EProduct;
 
 public class ProductsData implements IProductsData {
 
@@ -45,7 +47,7 @@ public class ProductsData implements IProductsData {
     }
     
     @Override
-    public Integer addRow(Product product){
+    public Boolean addRow(Product product){
 
         EntityManager entityManager;
 
@@ -58,16 +60,11 @@ public class ProductsData implements IProductsData {
 
             EProduct newEProduct = new EProduct(product);
 
-            Integer status = 0;
-
-            if(newEProduct.getName() != null && newEProduct.getName() != ""){
-                entityManager.persist(newEProduct);
-                status = 1;
-            }
+            entityManager.persist(newEProduct);
 
             userTransaction.commit();
 
-            return status;
+            return true;
 
         }
         catch(Exception ex){

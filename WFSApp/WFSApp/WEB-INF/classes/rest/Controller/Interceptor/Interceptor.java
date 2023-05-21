@@ -1,9 +1,10 @@
-package rest.Controller.Interceptor;
+package rest.controller.interceptor;
 
 import java.io.IOException;
 
 import jakarta.ws.rs.ext.Provider;
-
+import rest.controller.token.Token;
+import rest.controller.token.TokenTools;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 
@@ -12,9 +13,6 @@ import jakarta.ws.rs.core.Response;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-
-import rest.Controller.Token.Token;
-import rest.Controller.Token.TokenTools;
 
 @Provider
 @IdRequired

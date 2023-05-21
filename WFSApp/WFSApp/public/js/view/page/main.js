@@ -1,4 +1,4 @@
-import { Products } from "../../apiModel/productsModel.js";
+import { Products } from "../../Model/productsModel.js";
 
 class pageMain{
 

@@ -1,8 +1,8 @@
-package rest.Model.User;
+package rest.model.user;
 
-import rest.Model.DTO.User;
-import rest.Repository.User.IUserData;
-//TEMPORARY
+import rest.model.dto.User;
+import rest.model.user.in.IUserData;
+import rest.model.user.out.IUserModel;
 
 public class UserModel implements IUserModel{
 

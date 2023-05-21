@@ -1,9 +1,8 @@
-package rest.Builder.User;
+package rest.builder.user;
 
-import rest.Builder.Built;
-import rest.Model.User.IUserModel;
-import rest.Repository.User.IUserData;
-
+import rest.builder.Built;
+import rest.model.user.in.IUserData;
+import rest.model.user.out.IUserModel;
 import jakarta.inject.Inject;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.Default;

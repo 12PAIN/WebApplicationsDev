@@ -1,9 +1,10 @@
-package rest.Model.Products;
+package rest.model.products;
 
 import java.util.ArrayList;
 
-import rest.Model.DTO.Product;
-import rest.Repository.Products.IProductsData;
+import rest.model.dto.Product;
+import rest.model.products.in.IProductsData;
+import rest.model.products.out.IProductsModel;
 
 //TEMPORARY
 
@@ -18,7 +19,7 @@ public class ProductsModel implements IProductsModel{
     }
 
     @Override
-    public Integer addRow(Product newProduct){
+    public Boolean addRow(Product newProduct){
         return datasource.addRow(newProduct);
     };
 

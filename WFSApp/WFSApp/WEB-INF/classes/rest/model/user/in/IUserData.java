@@ -1,6 +1,6 @@
-package rest.Repository.User;
+package rest.model.user.in;
 
-import rest.Model.DTO.User;
+import rest.model.dto.User;
 
 public interface IUserData {
     public User getUserData(User getableUser);

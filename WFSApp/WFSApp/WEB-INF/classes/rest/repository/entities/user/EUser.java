@@ -1,8 +1,8 @@
-package rest.Repository.User;
+package rest.repository.entities.user;
 
 import java.io.Serializable;
 import jakarta.persistence.*;
-import rest.Model.DTO.User;
+import rest.model.dto.User;
 
 @Entity
 @Table(name = "\"users\"")

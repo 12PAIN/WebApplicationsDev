@@ -123,3 +123,21 @@ table, th, td, tr{
     margin: 0 auto;
     justify-content: space-around;
 }
+
+.div-LoginError {
+    display: flex; 
+    width: 150px; 
+    justify-content: space-around; 
+    flex:auto; color: red; 
+    font-size: 0.8em; 
+    font-weight: bold;
+}
+
+.div-LoginWarning {
+    display: flex; 
+    width: 150px; 
+    justify-content: space-around; 
+    flex:auto; color: blue; 
+    font-size: 0.8em; 
+    font-weight: bold;
+}

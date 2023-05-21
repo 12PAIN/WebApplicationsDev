@@ -1,4 +1,4 @@
-package rest.Controller.Service.Root;
+package rest.controller.service.root;
 
 import jakarta.ws.rs.Path;
 

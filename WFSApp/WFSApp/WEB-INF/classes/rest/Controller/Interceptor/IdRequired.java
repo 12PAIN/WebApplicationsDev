@@ -1,4 +1,4 @@
-package rest.Controller.Interceptor;
+package rest.controller.interceptor;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;

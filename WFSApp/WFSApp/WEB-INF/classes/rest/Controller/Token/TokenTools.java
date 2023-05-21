@@ -1,9 +1,9 @@
-package rest.Controller.Token;
+package rest.controller.token;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
-import rest.Model.DTO.User;
+import rest.model.dto.User;
 
 public class TokenTools {
 

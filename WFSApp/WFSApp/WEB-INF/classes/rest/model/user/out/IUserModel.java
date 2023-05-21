@@ -1,7 +1,7 @@
-package rest.Model.User;
+package rest.model.user.out;
 
-import rest.Model.DTO.User;
-import rest.Repository.User.IUserData;
+import rest.model.dto.User;
+import rest.model.user.in.IUserData;
 
 public interface IUserModel {
     public User checkUser(User user);

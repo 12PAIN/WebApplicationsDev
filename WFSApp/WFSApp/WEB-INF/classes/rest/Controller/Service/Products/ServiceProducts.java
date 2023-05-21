@@ -1,4 +1,4 @@
-package rest.Controller.Service.Products;
+package rest.controller.service.products;
 
 import jakarta.ws.rs.Path;
 
@@ -20,10 +20,10 @@ import jakarta.json.bind.JsonbException;
 
 import java.util.ArrayList;
 
-import rest.Builder.Built;
-import rest.Controller.Interceptor.IdRequired;
-import rest.Model.DTO.Product;
-import rest.Model.Products.IProductsModel;
+import rest.builder.Built;
+import rest.controller.interceptor.IdRequired;
+import rest.model.dto.Product;
+import rest.model.products.out.IProductsModel;
 import jakarta.inject.Inject;
 
 @Path("/products")
@@ -74,14 +74,12 @@ public class ServiceProducts {
 
             product = jsonb.fromJson(newProduct, new Product(){}.getClass().getGenericSuperclass());
         
-            Integer row = model.addRow(product);
-            if(row == 1) resultJSON = jsonb.toJson("row_added");
+            Boolean status = model.addRow(product);
+            if(status == true) resultJSON = jsonb.toJson("row_added");
             else{
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
             }
             
-
-
         }catch (JsonbException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();	             
         }

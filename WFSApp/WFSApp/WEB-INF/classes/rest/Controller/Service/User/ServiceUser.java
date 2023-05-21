@@ -1,4 +1,4 @@
-package rest.Controller.Service.User;
+package rest.controller.service.user;
 
 import jakarta.ws.rs.Path;
 
@@ -12,15 +12,12 @@ import jakarta.ws.rs.core.Response;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
-
-
-import rest.Controller.Token.Token;
-import rest.Controller.Token.TokenTools;
-
-import rest.Model.DTO.User;
-import rest.Model.User.IUserModel;
+import rest.builder.Built;
+import rest.controller.token.Token;
+import rest.controller.token.TokenTools;
+import rest.model.dto.User;
+import rest.model.user.out.IUserModel;
 import jakarta.inject.Inject;
-import rest.Builder.Built;
 
 @Path("/users")
 public class ServiceUser {
