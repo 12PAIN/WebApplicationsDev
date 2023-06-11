@@ -1,32 +1,40 @@
+import {Product} from "./dto/product.js"
 
-class Products{
-    constructor(){
-        this.product = undefined;
-    }
-    setProduct(productParam){
-        this.product = productParam;
-    }
+class ProductsDatasource{
+    constructor(){}
+
     _getProductsList(){
         return new Promise( (resolve) => {
             let status;
-            fetch('api/products/list', {method: 'GET', headers: {'Content-Type': 'application/json;charset=utf-8', 'User-token': localStorage.getItem('WFSAppUserToken')}})
+            fetch('api/products', {method: 'GET', headers: {'Content-Type': 'application/json;charset=utf-8', 'User-token': localStorage.getItem('WFSAppUserToken')}})
             .then( (response) => {
                 status = response.status;
-                return response.json()
+
+                return response.json();
             })
             .then( (data) => {
+
+                let productsList = [];
+
+
+                for(let product of data){
+                    productsList.push(new Product(product));
+                }
+
                 let result = {
                     status: status,
-                    text: data
+                    data: productsList
                 }
+
                 resolve(result);  
             })
         });
     }
-    _addProduct(){
+    
+    _addProduct(product){
         return new Promise( (resolve) => {
             let status;
-            fetch('api/products/', {method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8', 'User-token': localStorage.getItem('WFSAppUserToken')}, body: JSON.stringify(this.product)})
+            fetch('api/products/', {method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8', 'User-token': localStorage.getItem('WFSAppUserToken')}, body: JSON.stringify(product)})
             .then( (response) => {
                 status = response.status;
                 return response.json()
@@ -34,31 +42,14 @@ class Products{
             .then( (data) => {
                 let result = {
                     status: status,
-                    text: data
+                    data: new Product(data)
                 }
                 resolve(result);  
             })
         });
     }
-    _deleteProduct(toDelete){
-        return new Promise( (resolve) => {
-            let status;
-            fetch('api/products/', {method: 'DELETE', headers: {'Content-Type': 'application/json;charset=utf-8', 'User-token': localStorage.getItem('WFSAppUserToken'), 'To_Delete_IDs': toDelete}})
-            .then( (response) => {
-                status = response.status;
-                return response.json()
-            })
-            .then( (data) => {
-                let result = {
-                    status: status,
-                    text: data
-                }
-                resolve(result);  
-            })
-        });
-    }
+
 }
 
 
-
-export{Products};
+export{ProductsDatasource};

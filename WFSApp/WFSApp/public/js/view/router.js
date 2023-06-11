@@ -1,6 +1,7 @@
 import{pageLogin}from "./page/login.js";
 import{pageRegister}from "./page/register.js";
 import{pageMain}from "./page/main.js";  
+import{pageSales}from "./page/sales.js"
 
 class Router{
 
@@ -15,6 +16,14 @@ class Router{
             }
         };
     
+        this.SalesPage = {
+            page: new pageSales(this),
+            id: "salesPage",
+            render: (root) => {
+                this.SalesPage.page._init(root);
+            }
+        };
+
         this.registerPage = {
             page: new pageRegister(this),
             id: "registerPage",
@@ -33,7 +42,7 @@ class Router{
     
         //let pages = [loginPage, registerPage, mainPage];
 
-        this.pages = [this.LoginPage, this.MainPage, this.registerPage];
+        this.pages = [this.LoginPage, this.MainPage, this.registerPage, this.SalesPage];
 
     }
 

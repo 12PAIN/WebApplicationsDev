@@ -19,6 +19,8 @@ import rest.model.dto.User;
 import rest.model.user.out.IUserModel;
 import jakarta.inject.Inject;
 
+
+
 @Path("/users")
 public class ServiceUser {
 
@@ -77,7 +79,7 @@ public class ServiceUser {
         try {  
             
             newUser = jsonb.fromJson(User,new User(){}.getClass().getGenericSuperclass());    
-            
+
             Boolean userCreated = model.addUser(newUser);
 
             if(userCreated == null){

@@ -19,7 +19,7 @@ public class ProductsModel implements IProductsModel{
     }
 
     @Override
-    public Boolean addRow(Product newProduct){
+    public Product addRow(Product newProduct){
         return datasource.addRow(newProduct);
     };
 

@@ -11,9 +11,9 @@ public class TokenTools {
         Payload payload = new Payload();
         payload.setLogin(user.getLogin());
         payload.setEmail(user.getEmail());
+        payload.setName(user.getName());
         return payload;
     }
-
 
     public static Boolean verifyToken(Token token){
         

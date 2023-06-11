@@ -47,7 +47,7 @@ public class ProductsData implements IProductsData {
     }
     
     @Override
-    public Boolean addRow(Product product){
+    public Product addRow(Product product){
 
         EntityManager entityManager;
 
@@ -64,7 +64,7 @@ public class ProductsData implements IProductsData {
 
             userTransaction.commit();
 
-            return true;
+            return newEProduct.castToProduct();
 
         }
         catch(Exception ex){

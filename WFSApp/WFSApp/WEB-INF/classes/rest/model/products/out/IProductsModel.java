@@ -9,5 +9,5 @@ public interface IProductsModel {
     public void setDataSource(IProductsData datasource);
     Integer deleteRows(ArrayList<Integer> toDelete);
     ArrayList<Product> getProductsList();
-    Boolean addRow(Product newProduct);
+    Product addRow(Product newProduct);
 }

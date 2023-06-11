@@ -2,13 +2,16 @@ javac WFSApp\WEB-INF\classes\rest\Model\DTO\*.java -classpath ".\WFSApp\WEB-INF\
 
 javac WFSApp\WEB-INF\classes\rest\Repository\Products\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Repository\User\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
+javac WFSApp\WEB-INF\classes\rest\Repository\Sales\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 
 javac WFSApp\WEB-INF\classes\rest\Model\User\*.java -classpath ".\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Model\Products\*.java -classpath ".\WFSApp\WEB-INF\classes"
+javac WFSApp\WEB-INF\classes\rest\Model\Sales\*.java -classpath ".\WFSApp\WEB-INF\classes"
 
 javac WFSApp\WEB-INF\classes\rest\Builder\Built.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Builder\User\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;D:\Study\FullStackCourse\glassfish6\glassfish\modules\jakarta.enterprise.cdi-api.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Builder\Products\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;D:\Study\FullStackCourse\glassfish6\glassfish\modules\jakarta.enterprise.cdi-api.jar;.\WFSApp\WEB-INF\classes"
+javac WFSApp\WEB-INF\classes\rest\Builder\Sales\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;D:\Study\FullStackCourse\glassfish6\glassfish\modules\jakarta.enterprise.cdi-api.jar;.\WFSApp\WEB-INF\classes"
 
 javac WFSApp\WEB-INF\classes\rest\Controller\Config\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Controller\Token\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
@@ -18,6 +21,7 @@ javac WFSApp\WEB-INF\classes\rest\Controller\Interceptor\*.java -classpath "D:\S
 javac WFSApp\WEB-INF\classes\rest\Controller\Service\Root\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Controller\Service\User\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 javac WFSApp\WEB-INF\classes\rest\Controller\Service\Products\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
+javac WFSApp\WEB-INF\classes\rest\Controller\Service\Sales\*.java -classpath "D:\Study\FullStackCourse\glassfish6\glassfish\lib\javaee.jar;.\WFSApp\WEB-INF\classes"
 
 
 pause

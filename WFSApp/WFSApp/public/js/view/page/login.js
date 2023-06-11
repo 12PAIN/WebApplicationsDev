@@ -1,11 +1,12 @@
-import { User } from "../../Model/userModel.js";
+import { UserDatasource } from "../../Model/userModel.js";
+import {User} from "../../Model/dto/user.js";
 
 class pageLogin{
 
     constructor(newRouter){
         this.root = undefined;
         this.router = newRouter;
-        this.userModel = new User();
+        this.userModel = new UserDatasource();
     }
 
     mainPageDisplay() {
@@ -24,7 +25,7 @@ class pageLogin{
             let errP = document.createElement('p');
             errP.id = 'errLogin';
             errP.class = 'div-LoginError';
-            errP.innerText = 'Failed to Login! Empty Login or Password!';
+            errP.innerText = 'Ошибка! Введите данные!';
             document.getElementById('loginDiv').appendChild(errP);
             return;
         }
@@ -35,21 +36,22 @@ class pageLogin{
             let errP = document.createElement('p');
             errP.id = 'errLogin';
             errP.class = 'div-LoginWarning';
-            errP.innerText = 'Please wait!';
+            errP.innerText = 'Пожалуйста подождите!';
             document.getElementById('loginDiv').appendChild(errP);
             this.authQuerry(document.getElementById('login').value, document.getElementById('password').value);
         }
     }
 
     async authQuerry(login, password) {
-        let user = {
+        let user = new User({
+            id: undefined,
             login: login,
             password: password,
-            email: undefined
-        }
+            email: undefined,
+            name: undefined
+        })
 
-        this.userModel.setUser(user);
-        let response = await this.userModel._authQuery();
+        let response = await this.userModel._authQuery(user);
 
         let status = response.status;
         response = response.text;
@@ -62,7 +64,7 @@ class pageLogin{
             let errP = document.createElement('p');
             errP.id = 'errLogin';
             errP.class = 'div-LoginWarning';
-            errP.innerText = 'Logined! Please, wait for pesponse...';
+            errP.innerText = 'Вы вошли! Загрузка...';
             document.getElementById('loginDiv').appendChild(errP);
             this.renderPage();
             return;
@@ -74,7 +76,7 @@ class pageLogin{
             let errP = document.createElement('p');
             errP.id = 'errLogin';
             errP.class = 'div-LoginError';
-            errP.innerText = 'Failed to Login! Invalid Login or Password.';
+            errP.innerText = 'Ошибка входа! Неправильный логин или пароль.';
             document.getElementById('loginDiv').appendChild(errP);
         }
         else {
@@ -84,7 +86,7 @@ class pageLogin{
             let errP = document.createElement('p');
             errP.id = 'errLogin';
             errP.class = 'div-LoginError';
-            errP.innerText = 'Server error! Try again or try again later.';
+            errP.innerText = 'Ошибка сервера! Попробуйте позже';
             document.getElementById('loginDiv').appendChild(errP);
         }
 
@@ -98,7 +100,7 @@ class pageLogin{
         div.id = 'loginDiv';
         div.className = 'div-loginForm WrapCenteredInlineBlock';
         let header = document.createElement('p');
-        header.innerText = "WFSApp";
+        header.innerText = "Добро пожаловать!";
         div.appendChild(header);
         
         let p1 = document.createElement('p');
@@ -113,8 +115,8 @@ class pageLogin{
         inp2.id = 'password';
         inp2.type = 'password';
     
-        inp1.placeholder = 'Login';
-        inp2.placeholder = 'Password';
+        inp1.placeholder = 'Логин';
+        inp2.placeholder = 'Пароль';
     
         p1.appendChild(inp1);
         p2.appendChild(inp2);
@@ -126,9 +128,9 @@ class pageLogin{
     
         let btn1 = document.createElement('button');
         let btn2 = document.createElement('button');
-        btn1.textContent = 'Login';
+        btn1.textContent = 'Войти';
         btn1.type = 'submit';
-        btn2.textContent = 'Register';
+        btn2.textContent = 'Зарегистрироваться';
     
     
         let divBtn = document.createElement('div');
@@ -142,17 +144,17 @@ class pageLogin{
         root.appendChild(div);
     
         btn1.addEventListener("click", this.loginButtonClicked.bind(this));
-        inp1.addEventListener("keypress", function(event) {
+        inp1.addEventListener("keyup", (function(event) {
             if (event.key === "Enter") {
                 this.loginButtonClicked();
             }
-        });
+        }).bind(this));
     
-        inp2.addEventListener("keypress", function(event) {
+        inp2.addEventListener("keyup", (function(event) {
             if (event.key === "Enter") {
                 this.loginButtonClicked();
             }
-        });
+        }).bind(this));
         btn2.addEventListener("click", this.registerButtonClicked.bind(this));
     }
 

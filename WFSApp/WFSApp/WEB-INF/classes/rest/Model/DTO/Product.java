@@ -5,6 +5,15 @@ public class Product {
     private int price;
     private String description;
     private String name;
+    private int saled;
+
+    public int getSaled() {
+        return saled;
+    }
+
+    public void setSaled(int saled) {
+        this.saled = saled;
+    }
 
     public int getId() {
         return id;

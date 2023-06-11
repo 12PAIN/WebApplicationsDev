@@ -37,7 +37,7 @@ public class ServiceProducts {
 
     @GET
     @IdRequired
-    @Path("/list")
+    @Path("/")
     @Produces("application/json")
     public Response getProductList(){
 
@@ -64,7 +64,7 @@ public class ServiceProducts {
     @Path("/")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addProduct(@HeaderParam("User-token") String userToken, String newProduct){
+    public Response addProduct(String newProduct){
 
         Product product;
         Jsonb jsonb = JsonbBuilder.create();
@@ -74,8 +74,8 @@ public class ServiceProducts {
 
             product = jsonb.fromJson(newProduct, new Product(){}.getClass().getGenericSuperclass());
         
-            Boolean status = model.addRow(product);
-            if(status == true) resultJSON = jsonb.toJson("row_added");
+            Product productNew = model.addRow(product);
+            if(productNew != null) resultJSON = jsonb.toJson(productNew);
             else{
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
             }

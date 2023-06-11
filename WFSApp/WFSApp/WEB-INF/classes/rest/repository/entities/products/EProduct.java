@@ -21,6 +21,17 @@ public class EProduct  implements Serializable{
     @Column(name = "\"description\"")
     private String description;
 
+    @Column(name = "\"saled\"")
+    private int saled;
+
+    public int getSaled() {
+        return saled;
+    }
+
+    public void setSaled(int saled) {
+        this.saled = saled;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -59,6 +70,7 @@ public class EProduct  implements Serializable{
         this.setName(product.getName());
         this.setPrice(product.getPrice());
         this.setDescription(product.getDescription());
+        this.setSaled(product.getSaled());
     }
     
     public Product castToProduct(){
@@ -68,6 +80,7 @@ public class EProduct  implements Serializable{
         product.setName(this.getName());
         product.setPrice(this.getPrice());
         product.setDescription(this.getDescription());
+        product.setSaled(this.saled);
 
         return product;
     }

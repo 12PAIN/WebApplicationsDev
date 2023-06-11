@@ -1,16 +1,11 @@
-class User{
-    constructor(){
-        this.user = undefined;
-    }
 
-    setUser(usr){
-        this.user = usr;
-    }
+class UserDatasource{
+    constructor(){}
 
-    _authQuery(){
+    _authQuery(user){
         return new Promise( (resolve) => {
             let status;
-            fetch('api/users/auth',{method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8'},body: JSON.stringify(this.user)})
+            fetch('api/users/auth',{method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8'},body: JSON.stringify(user)})
             .then( (response) => { 
                 status = response.status;
                 return response.json()
@@ -26,10 +21,10 @@ class User{
     }
 
 
-    _registerQuery(){
+    _registerQuery(user){
         return new Promise( (resolve) => {
             let status;
-            fetch('api/users/',{method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8'},body: JSON.stringify(this.user)})
+            fetch('api/users/',{method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8'},body: JSON.stringify(user)})
             .then( (response) => { 
                 status = response.status;
                 return response.json()
@@ -46,4 +41,4 @@ class User{
     }
 }
 
-export {User};
+export {UserDatasource};

@@ -20,6 +20,17 @@ public class EUser implements Serializable {
     @Column(name = "\"email\"")
     private String email;
 
+    @Column(name = "\"name\"")
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -59,6 +70,8 @@ public class EUser implements Serializable {
         user.setLogin(this.getLogin());
         user.setEmail(this.getEmail());
         user.setPassword(this.getPassword());
+        user.setName(this.getName());
+    
 
         return user;
     }
@@ -69,6 +82,7 @@ public class EUser implements Serializable {
         this.login = user.getLogin();
         this.email = user.getEmail();
         this.password = user.getPassword();
+        this.name = user.getName();
     }
 
 }

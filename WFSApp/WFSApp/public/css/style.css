@@ -113,7 +113,15 @@ table, th, td, tr{
     position: fixed;
     top: 2%;
     background-color:#A2FF93;
-    left: 98%;
+    left: 95%;
+    transform: translate(-50%, -50%);
+}
+
+.SalesPageButton {
+    position: fixed;
+    top: 2%;
+    background-color:#A2FF93;
+    left: 90%;
     transform: translate(-50%, -50%);
 }
 
@@ -140,4 +148,37 @@ table, th, td, tr{
     flex:auto; color: blue; 
     font-size: 0.8em; 
     font-weight: bold;
+}
+
+.saleFormMainWrapper{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #00000070;
+}
+
+.divHelloUser{
+    background-color: #A2FF93;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    max-height: fit-content;
+    width: fit-content;
+    max-width: 300px;
+    
+    font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif; font-size: 15px;
+
+    position: fixed;
+    top: 1%;
+    left: 1%;
+
+    padding: 3px;
+    justify-content: space-around;
+
+    box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.295);
+
+    border-radius: 4px;
 }
