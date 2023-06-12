@@ -245,15 +245,15 @@ class pageMain{
         }
 
         if(sortType == 'noSort'){
-            this.products.sort((a, b) => a.id > b.id ? 1 : -1);
+            this.displaybleProducts.sort((a, b) => a.id > b.id ? 1 : -1);
         }
 
         if(sortType == 'sortPriceUp'){
-            this.products.sort((a, b) => a.price > b.price ? 1 : -1);
+            this.displaybleProducts.sort((a, b) => a.price > b.price ? 1 : -1);
         }
 
         if(sortType == 'sortPriceDown'){
-            this.products.sort((a, b) => a.price <= b.price ? 1 : -1);
+            this.displaybleProducts.sort((a, b) => a.price <= b.price ? 1 : -1);
         }
         /////   /////
 
