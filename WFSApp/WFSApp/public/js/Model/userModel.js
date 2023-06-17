@@ -2,7 +2,7 @@
 class UserDatasource{
     constructor(){}
 
-    _authQuery(user){
+    async _authQuery(user){
         return new Promise( (resolve) => {
             let status;
             fetch('api/users/auth',{method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8'},body: JSON.stringify(user)})
@@ -21,7 +21,7 @@ class UserDatasource{
     }
 
 
-    _registerQuery(user){
+    async _registerQuery(user){
         return new Promise( (resolve) => {
             let status;
             fetch('api/users/',{method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8'},body: JSON.stringify(user)})

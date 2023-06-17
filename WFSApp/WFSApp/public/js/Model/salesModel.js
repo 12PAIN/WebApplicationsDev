@@ -5,7 +5,7 @@ class SalesDatasource{
 
     constructor(){}
 
-    _getSalesList(){
+    async _getSalesList(){
 
         return new Promise( (resolve) => {
             let status;
@@ -35,7 +35,7 @@ class SalesDatasource{
 
     }
 
-    _addSale(sale){
+    async _addSale(sale){
         return new Promise( (resolve) => {
             let status;
             fetch('api/sales', {method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8', 'User-token': localStorage.getItem('WFSAppUserToken')}, body: JSON.stringify(sale)})

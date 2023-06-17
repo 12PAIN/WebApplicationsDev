@@ -3,7 +3,7 @@ import {Product} from "./dto/product.js"
 class ProductsDatasource{
     constructor(){}
 
-    _getProductsList(){
+    async _getProductsList(){
         return new Promise( (resolve) => {
             let status;
             fetch('api/products', {method: 'GET', headers: {'Content-Type': 'application/json;charset=utf-8', 'User-token': localStorage.getItem('WFSAppUserToken')}})
@@ -31,7 +31,7 @@ class ProductsDatasource{
         });
     }
     
-    _addProduct(product){
+    async _addProduct(product){
         return new Promise( (resolve) => {
             let status;
             fetch('api/products/', {method: 'POST', headers: {'Content-Type': 'application/json;charset=utf-8', 'User-token': localStorage.getItem('WFSAppUserToken')}, body: JSON.stringify(product)})
