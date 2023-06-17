@@ -28,7 +28,6 @@ class pageMain{
             id: undefined,
             price: Number.parseInt(document.getElementById('Price').value),
             description: document.getElementById('Description').value,
-            saled: 0
         })
 
         if(product.name == undefined || product.name == null || product.name == ''){

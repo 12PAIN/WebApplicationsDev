@@ -38,7 +38,16 @@ public class ServiceSales {
 
         try{
             
-            resultJSON = jsonb.toJson(model.getSales());
+            resultJSON = null;
+
+            try{
+                resultJSON = jsonb.toJson(model.getSales());
+            }
+            catch(Exception e){
+                resultJSON = null;
+            }
+
+
             if(resultJSON == null) return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
 
         }catch (JsonbException e) {
@@ -65,7 +74,15 @@ public class ServiceSales {
 
             sale = jsonb.fromJson(newProduct, new Sale(){}.getClass().getGenericSuperclass());
         
-            Sale saleNew = model.addSale(sale);
+            Sale saleNew = null;
+
+            try{
+                saleNew = model.addSale(sale);
+            }
+            catch(Exception e){
+                saleNew = null;
+            }
+
             if(saleNew != null) resultJSON = jsonb.toJson(saleNew);
             else{
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();

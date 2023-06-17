@@ -40,7 +40,16 @@ public class ServiceUser {
         try{
 
             user = jsonb.fromJson(userJson, new User(){}.getClass().getGenericSuperclass());
-            User userData = model.checkUser(user);
+            
+            
+            User userData = null;
+
+            try{
+                userData = model.checkUser(user);
+            }   
+            catch(Exception e){
+                userData = null;
+            }
 
             
             if(userData == null){
@@ -80,7 +89,16 @@ public class ServiceUser {
             
             newUser = jsonb.fromJson(User,new User(){}.getClass().getGenericSuperclass());    
 
-            Boolean userCreated = model.addUser(newUser);
+            
+
+            Boolean userCreated = null;
+
+            try{
+                userCreated = model.addUser(newUser);
+            }
+            catch(Exception e){
+                userCreated = null;
+            }
 
             if(userCreated == null){
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();

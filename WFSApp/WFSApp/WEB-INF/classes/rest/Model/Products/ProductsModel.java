@@ -20,6 +20,7 @@ public class ProductsModel implements IProductsModel{
 
     @Override
     public Product addRow(Product newProduct){
+        newProduct.setSaled(0);
         return datasource.addRow(newProduct);
     };
 
