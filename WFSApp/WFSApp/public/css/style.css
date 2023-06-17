@@ -64,11 +64,13 @@ table, th, td, tr{
     max-height: 586px;
 }
 
-.productsList {
+table {
     overflow-y:auto;
-    max-height: 586px;
+    max-height: 600px;
     height: fit-content;
 }
+
+
 
 .productList {
     
@@ -77,6 +79,8 @@ table, th, td, tr{
     align-items: flex-start;
     padding: 14px;
     gap: 10px;
+
+    
 
     position: fixed;
     width: fit-content;
